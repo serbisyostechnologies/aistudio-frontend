@@ -1,0 +1,45 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/assets/fonts/bitter/bitter-bold-italic.ttf",
+      "sha1": "32aa8374790ac7ff247fa1448bb1e00be5ea8bb4"
+    },
+    {
+      "path": "src/assets/fonts/bitter/bitter-bold.ttf",
+      "sha1": "b98a041c785b854030ce948dcadaeacaf8dfcfe3"
+    },
+    {
+      "path": "src/assets/fonts/bitter/bitter-italic.ttf",
+      "sha1": "866866eeb580f1f2823e1279585fe84cefc95b12"
+    },
+    {
+      "path": "src/assets/fonts/bitter/bitter.ttf",
+      "sha1": "6a1da16746c6f2eeb9d11ee53962cdb1384a764c"
+    },
+    {
+      "path": "src/assets/fonts/roboto/roboto-bold.ttf",
+      "sha1": "d3dfcf889c8e6684eef9ca9cf5e9e4b91687f01e"
+    },
+    {
+      "path": "src/assets/fonts/roboto/roboto.ttf",
+      "sha1": "ff03d465c6c05463866d8627bb41f8a854d1d12f"
+    },
+    {
+      "path": "src/assets/fonts/saira/saira-bold-italic.ttf",
+      "sha1": "a969de8da3b85fdc4e1ff89829e466c7e23077c3"
+    },
+    {
+      "path": "src/assets/fonts/saira/saira-bold.ttf",
+      "sha1": "cf1e861bd3a36f1acf35bab6ded3b4002f5a5890"
+    },
+    {
+      "path": "src/assets/fonts/saira/saira-italic.ttf",
+      "sha1": "992805f7df37afa909521888799ffe6db6aa98b5"
+    },
+    {
+      "path": "src/assets/fonts/saira/saira.ttf",
+      "sha1": "b28ae7722801f494249ecebf4cd91e68962a5794"
+    }
+  ]
+}

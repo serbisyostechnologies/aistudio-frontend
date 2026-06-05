@@ -1,0 +1,47 @@
+import apiClient from './authInterceptor';
+
+//User end points
+export const resiger = async data => {
+  return await apiClient.post('/users/register', data);
+};
+
+export const login = async data => {
+  return await apiClient.post('/users/login', data);
+};
+
+export const logout = async data => {
+  return await apiClient.post('/users/logout', data);
+};
+
+export const uploadProfilePhotoApi = async data => {
+  return await apiClient.post('/users/upload-profile-photo', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const removeProfilePhotoApi = async data => {
+  return await apiClient.post('/users/remove-profile-photo', data);
+};
+
+export const updateDeviceIdentitiesApi = async data => {
+  return await apiClient.post('/users/update-device-identities', data);
+};
+
+//Project end points
+export const createImage = async data => {
+  return await apiClient.post('/projects/create-image-using-prompt', data);
+};
+
+export const getAllProjects = async data => {
+  return await apiClient.post('/projects/get-all-by-user-id', data);
+};
+
+export const updateProjectLikeUnlike = async data => {
+  return await apiClient.post('/projects/update-project-like', data);
+};
+
+export const deleteProjectById = async data => {
+  return await apiClient.post('/projects/delete-project-by-id', data);
+};
