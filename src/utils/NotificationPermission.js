@@ -39,15 +39,11 @@ export const requestUserPermission = async () => {
 export const getFcmToken = async () => {
   try {
     const hasPermission = await requestUserPermission();
-
     if (!hasPermission) {
       return null;
     }
 
     const token = await getToken(messaging);
-
-    console.log('FCM TOKEN:', token);
-
     return token;
   } catch (error) {
     console.log('FCM token error:', error);

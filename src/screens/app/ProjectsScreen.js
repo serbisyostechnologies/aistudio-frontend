@@ -34,7 +34,6 @@ export default function ProjectScreen({ navigation }) {
     try {
       const userId = user._id;
       const response = await getAllProjects({ userId });
-      console.log(response.data);
       setProjects(response.data.projects);
     } catch (error) {
       console.log(error.message);

@@ -20,7 +20,7 @@ import { createImage } from '../../src/api/endPoints';
 import { useSelector } from 'react-redux';
 import { shareImage, downloadImage } from '../utils/Utilities';
 import { globalStyles, colors, fonts } from '../styles/globalStyles';
-import CustomGalleryModal from '../utils/CustomGalleryModal';
+import CustomGalleryModal from "../utils/CustomGalleryModal";
 
 export default function CreatePhotoCollage({ navigation }) {
   const defaultPrompt =
@@ -136,7 +136,7 @@ export default function CreatePhotoCollage({ navigation }) {
           backgroundColor: colors.primary,
         }}
       />
-      <StatusBar backgroundColor={colors.primary} barStyle="dark-content" />
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -305,11 +305,9 @@ export default function CreatePhotoCollage({ navigation }) {
       <Toast config={toastConfig} />
       <CustomGalleryModal
         visible={showGallery}
-        maxSelection={10}
         onClose={() => setShowGallery(false)}
-        onDone={images => {
-          console.log('Selected:', images);
-        }}
+        onDone={(images) => console.log(images)}
+        selectionLimit={10}
       />
     </>
   );

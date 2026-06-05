@@ -1,195 +1,96 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import {
-  View,
   Modal,
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
   FlatList,
   Image,
-  TouchableOpacity,
-  Text,
-  PermissionsAndroid,
-  Platform,
-  ActivityIndicator,
-  StyleSheet,
   Dimensions,
 } from 'react-native';
-import CameraRoll from "@react-native-camera-roll/camera-roll";
+import { launchImageLibrary } from 'react-native-image-picker';
+import { globalStyles, colors, fonts } from '../styles/globalStyles';
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-const ITEM_SIZE = SCREEN_WIDTH / 3;
-
+const screenWidth = Dimensions.get('window').width - 40;
 const CustomGalleryModal = ({
   visible,
   onClose,
   onDone,
-  maxSelection = 10,
+  selectionLimit = 10,
 }) => {
-  const [photos, setPhotos] = useState([]);
   const [selected, setSelected] = useState([]);
-  const [cursor, setCursor] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [hasNext, setHasNext] = useState(true);
 
-  // 🔐 Permission
-  const requestPermission = async () => {
-    if (Platform.OS !== 'android') return true;
-
-    try {
-      const result =
-        Platform.Version >= 33
-          ? await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
-            )
-          : await PermissionsAndroid.request(
-              PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-            );
-
-      console.log('Permission result:', result);
-
-      if (result === PermissionsAndroid.RESULTS.GRANTED) {
-        return true;
-      }
-
-      if (result === PermissionsAndroid.RESULTS.NEVER_ASK_AGAIN) {
-        Alert.alert(
-          'Permission Required',
-          'Gallery access is blocked. Please enable it from settings.',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            {
-              text: 'Open Settings',
-              onPress: () => Linking.openSettings(),
-            },
-          ],
-        );
-      }
-
-      return false;
-    } catch (e) {
-      console.log(e);
-      return false;
-    }
-  };
-
-  // 📥 Load images (lazy pagination)
-  const loadPhotos = useCallback(async () => {
-    if (loading || !hasNext) return;
-
-    setLoading(true);
-
-    try {
-      const res = await CameraRoll.getPhotos({
-        first: 60,
-        assetType: 'Photos',
-        after: cursor,
-      });
-
-      console.log('CameraRoll RESPONSE:', res);
-
-      if (!res?.edges) {
-        setHasNext(false);
-        return;
-      }
-
-      setPhotos(prev => [...prev, ...res.edges]);
-      setCursor(res.page_info.end_cursor);
-      setHasNext(res.page_info.has_next_page);
-    } catch (e) {
-      console.log('CameraRoll ERROR:', e);
-      setHasNext(false);
-    } finally {
-      setLoading(false); // 🔥 CRITICAL FIX
-    }
-  }, [cursor, loading, hasNext]);
-
-  // 🚀 Load when modal opens
-  useEffect(() => {
-    if (visible) {
-      (async () => {
-        const ok = await requestPermission();
-        if (ok && photos.length === 0) loadPhotos();
-      })();
-    }
-  }, [visible]);
-
-  // ✔ Toggle select
-  const toggleSelect = uri => {
-    setSelected(prev => {
-      if (prev.includes(uri)) {
-        return prev.filter(i => i !== uri);
-      }
-
-      if (prev.length < maxSelection) {
-        return [...prev, uri];
-      }
-
-      return prev;
+  // Open system gallery but control selection manually
+  const openGallery = async () => {
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      selectionLimit: selectionLimit,
+      includeBase64: false,
     });
+
+    if (result.didCancel) return;
+
+    if (result.assets) {
+      const selectedImage = {
+        uri: result.assets[0].uri,
+        fileName: result.assets[0].fileName,
+      }
+      setSelected(prev => [...prev, selectedImage]);
+    }
   };
 
-  // 📤 Done
-  const handleDone = () => {
-    const selectedImages = photos
-      .filter(p => selected.includes(p.node.image.uri))
-      .map(p => p.node.image);
-
-    onDone?.(selectedImages);
-    onClose?.();
+  const removeItem = uri => {
+    setSelected(selected.filter(i => i.uri !== uri));
   };
 
-  const renderItem = ({ item }) => {
-    const uri = item.node.image.uri;
-    const isSelected = selected.includes(uri);
-
-    return (
-      <TouchableOpacity onPress={() => toggleSelect(uri)} style={styles.item}>
-        <Image source={{ uri }} style={styles.image} />
-
-        {isSelected && (
-          <View style={styles.overlay}>
-            <Text style={styles.check}>✓</Text>
-          </View>
-        )}
-      </TouchableOpacity>
-    );
-  };
+  const closeModal = () => {
+    onClose();
+  }
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      presentationStyle="fullScreen"
-    >
+    <Modal visible={visible} animationType="slide">
       <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>
-          <TouchableOpacity onPress={onClose}>
-            <Text style={styles.cancel}>Cancel</Text>
+          <TouchableOpacity onPress={closeModal}>
+            <Text style={styles.btn}>Close</Text>
           </TouchableOpacity>
 
-          <Text style={styles.title}>
-            {selected.length}/{maxSelection}
-          </Text>
+          <Text style={styles.title}>Gallery</Text>
 
-          <TouchableOpacity onPress={handleDone}>
-            <Text style={styles.done}>Done</Text>
+          <TouchableOpacity
+            onPress={() => {
+              onDone(selected);
+              onClose();
+            }}
+          >
+            <Text style={styles.btn}>Done ({selected.length})</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Gallery */}
+        {/* Open Gallery Button */}
+        <TouchableOpacity style={styles.openBtn} onPress={openGallery}>
+          <Text style={{ color: '#fff', fontFamily: fonts.bold }}>Open Gallery</Text>
+        </TouchableOpacity>
+
+        {/* Selected Preview Grid */}
         <FlatList
-          data={photos}
+          data={selected}
           numColumns={3}
-          keyExtractor={item => item.node.image.uri}
-          renderItem={renderItem}
-          onEndReached={loadPhotos}
-          onEndReachedThreshold={0.5}
-          ListFooterComponent={
-            loading ? <ActivityIndicator style={{ padding: 20 }} /> : null
-          }
-          removeClippedSubviews
-          initialNumToRender={18}
-          maxToRenderPerBatch={24}
-          windowSize={10}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => removeItem(item.uri)}>
+              <Image source={{ uri: item.uri }} style={styles.image} />
+              <View style={styles.remove}>
+                <Text style={{ color: '#fff' }}>✕</Text>
+              </View>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={{
+            paddingVertical: 10,
+            paddingHorizontal: 15
+          }}
         />
       </View>
     </Modal>
@@ -198,49 +99,56 @@ const CustomGalleryModal = ({
 
 export default CustomGalleryModal;
 
+// ---------------- Styles ----------------
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: '#ffffff',
   },
+
   header: {
-    height: 55,
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
+    padding: 15,
+    backgroundColor: colors.primary
   },
-  cancel: {
-    color: '#fff',
-    fontSize: 16,
-  },
+
   title: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
+    fontFamily: fonts.bold
   },
-  done: {
-    color: '#00ff88',
-    fontSize: 16,
-    fontWeight: 'bold',
+
+  btn: {
+    color: colors.secondary,
+    fontSize: 15,
+    fontFamily: fonts.regular
   },
-  item: {
-    width: ITEM_SIZE,
-    height: ITEM_SIZE,
+
+  openBtn: {
+    backgroundColor: colors.primary,
+    margin: 15,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center'
   },
+
   image: {
-    width: '100%',
-    height: '100%',
+    width: screenWidth / 3,
+    height: screenWidth / 3,
+    margin: 2,
+    borderRadius: 5
   },
-  overlay: {
+
+  remove: {
     position: 'absolute',
-    top: 6,
-    right: 6,
-    backgroundColor: 'rgba(0,0,0,0.6)',
-    borderRadius: 12,
-    padding: 5,
-  },
-  check: {
-    color: '#00ff88',
-    fontWeight: 'bold',
+    top: 5,
+    right: 5,
+    backgroundColor: colors.primary,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
