@@ -307,7 +307,7 @@ export default function CreatePhotoCollage({ navigation }) {
         visible={showGallery}
         onClose={() => setShowGallery(false)}
         onDone={(images) => console.log(images)}
-        selectionLimit={10}
+        selectionLimit={6}
       />
     </>
   );
