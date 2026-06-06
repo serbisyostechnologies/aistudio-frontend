@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   StatusBar,
+  Modal,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSelector, useDispatch } from 'react-redux';
@@ -16,7 +17,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../utils/toastConfig';
 import Loader from '../../components/Loader';
-import { Modal } from 'react-native';
 import {
   removeProfilePhotoApi,
   uploadProfilePhotoApi,
@@ -90,10 +90,7 @@ export default function ProfileScreen({ navigation }) {
 
   const logoutClicked = () => {
     try {
-      
-    } catch(error) {
-
-    }
+    } catch (error) {}
     dispatch(logout());
     navigation.replace('Welcome');
   };
@@ -193,12 +190,6 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <>
-      <View
-        style={{
-          height: StatusBar.currentHeight,
-          backgroundColor: '#003a6b',
-        }}
-      />
       <StatusBar backgroundColor="#003a6b" barStyle="light-content" />
       <SafeAreaView style={styles.container}>
         <ScrollView>

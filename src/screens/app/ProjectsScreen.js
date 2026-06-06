@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   FlatList,
+  Text,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
@@ -21,6 +22,7 @@ import { toastConfig } from '../../utils/toastConfig';
 
 export default function ProjectScreen({ navigation }) {
   const user = useSelector(state => state.auth.user);
+  console.log(user);
   const fcmToken = useSelector(state => state.auth.fcmToken);
   const deviceId = useSelector(state => state.auth.deviceId);
   const [open, setOpen] = useState(false);
@@ -36,7 +38,10 @@ export default function ProjectScreen({ navigation }) {
       const response = await getAllProjects({ userId });
       setProjects(response.data.projects);
     } catch (error) {
-      console.log(error.message);
+      console.log('MESSAGE:', error.message);
+      console.log('CODE:', error.code);
+      console.log('RESPONSE:', error.response);
+      console.log('REQUEST:', error.request);
       setLoading(false);
       setProjects([]);
     }
@@ -103,21 +108,17 @@ export default function ProjectScreen({ navigation }) {
 
   return (
     <>
-      <View
-        style={{
-          height: StatusBar.currentHeight,
-          backgroundColor: colors.secondary,
-        }}
-      />
-      <StatusBar backgroundColor={colors.secondary} barStyle="dark-content" />
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
       <KeyboardAvoidingView
         style={{
           flex: 1,
-          paddingHorizontal: 10,
           marginBottom: 80,
         }}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
+        <View style={styles.header}>
+          <Text style={styles.subTitle}>AI Serbisyos Studio Workspace</Text>
+        </View>
         <FlatList
           data={projects}
           keyExtractor={item => item._id}
@@ -214,14 +215,6 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
     backgroundColor: colors.secondary,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 15,
-    backgroundColor: '#f5f5f5',
-  },
-
   title: {
     fontSize: 16,
     color: colors.secondary,
@@ -244,12 +237,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 15,
-    backgroundColor: colors.primary,
-  },
   body: {
     backgroundColor: '#f5f5f5',
     paddingVertical: 10,
@@ -258,5 +245,16 @@ const styles = StyleSheet.create({
     fontFamily: fonts.bold,
     color: colors.primary,
     fontSize: 14,
+  },
+  header: {
+    backgroundColor: colors.primary,
+    paddingHorizontal: 15,
+    paddingVertical: 20,
+    marginBottom: 20,
+  },
+  subTitle: {
+    color: colors.secondary,
+    fontSize: 18,
+    fontFamily: fonts.bold,
   },
 });

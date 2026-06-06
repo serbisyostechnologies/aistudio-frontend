@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NetworkErrorScreen from '../screens/utilities/NetworkErrorScreen';
 import SplashScreen from '../screens/auth/SplashScreen';
@@ -11,6 +10,8 @@ import TabNavigator from '../navigation/TabNavigator';
 import InactiveUserScreen from '../screens/utilities/InactiveUserScreen';
 import CreateImage from "../components/CreateImage";
 import CreatePhotoCollage from "../components/CreatePhotoCollage"
+import EditImage from "../components/EditImage";
+import AnalyseImage from "../components/AnalyseImage";
 
 const Stack = createNativeStackNavigator();
 
@@ -34,6 +35,8 @@ export default function AppNavigator() {
       <Stack.Screen name="NetworkError" component={NetworkErrorScreen} />
       <Stack.Screen name="InactiveUser" component={InactiveUserScreen} />
       <Stack.Screen name="CreateImage" component={CreateImage} />
+      <Stack.Screen name="EditImage" component={EditImage} />
+      <Stack.Screen name="AnalyseImage" component={AnalyseImage} />
       <Stack.Screen name="CreatePhotoCollage" component={CreatePhotoCollage} />
       <Stack.Screen name="AppHome" component={TabNavigator} />
     </Stack.Navigator>

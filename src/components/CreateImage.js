@@ -168,7 +168,7 @@ export default function CreateImage({ navigation }) {
           <Ionicons name="arrow-back" size={26} color="#fff" />
         </TouchableOpacity>
 
-        <Text style={styles.title}>Create an Image using AI</Text>
+        <Text style={styles.title}>AI Image</Text>
       </View>
       <KeyboardAvoidingView
         style={globalStyles.container}
@@ -184,7 +184,7 @@ export default function CreateImage({ navigation }) {
               <View style={styles.iconRow}>
                 <TouchableOpacity
                   style={styles.downloadBtn}
-                  onPress={() => shareImage(newImageUri)}
+                  onPress={() => shareImage(newImageUri, setToastMessage)}
                 >
                   <Ionicons name="share-social" size={20} color="white" />
                 </TouchableOpacity>
@@ -292,7 +292,7 @@ export default function CreateImage({ navigation }) {
             <View style={styles.menuWrapper}>
               <View style={styles.menuContainer}>
                 <ScrollView
-                  style={{ maxHeight: 200 }}
+                  style={{ maxHeight: 400 }}
                   nestedScrollEnabled={true}
                   showsVerticalScrollIndicator={false}
                 >
@@ -410,10 +410,11 @@ const styles = StyleSheet.create({
   },
   menuWrapper: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 130,
     left: 0,
     right: 0,
     alignItems: 'center',
+    zIndex: 9999
   },
   menuContainer: {
     width: '95%',

@@ -8,36 +8,36 @@ import {
   Platform,
   ScrollView,
   BackHandler,
-  StatusBar,
-  FlatList,
   Image,
-  Dimensions,
+  StatusBar,
+  Modal,
+  Pressable,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import { globalStyles, colors, fonts } from '../styles/globalStyles';
 import { useState, useEffect } from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../src/utils/toastConfig';
-import { createCollage } from '../../src/api/endPoints';
-import { useSelector } from 'react-redux';
 import { shareImage, downloadImage } from '../utils/Utilities';
-import { globalStyles, colors, fonts } from '../styles/globalStyles';
-import CustomGalleryModal from '../utils/CustomGalleryModal';
+import { useSelector } from 'react-redux';
 import AnimatedTextLoader from '../components/AnimatedTextLoader';
+import { pickImage } from '../utils/ImagePicker';
+import { requestPermissions } from '../components/RequestPermissions';
+import { editImage } from '../api/endPoints';
 
-const screenWidth = Dimensions.get('window').width - 40;
-
-export default function CreatePhotoCollage({ navigation }) {
+export default function EditImage({ navigation, route }) {
+  const { image } = route.params;
   const user = useSelector(state => state.auth.user);
   const user_id = user._id;
   const [loading, setLoading] = useState(false);
-  const [prompt, setPrompt] = useState();
+  const [prompt, setPrompt] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [newImageUri, setNewImageUri] = useState('');
   const [selectedImageSize, setSelectedImageSize] = useState('1024x1024');
   const [selectedImage, setSelectedImage] = useState('Square');
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [showGallery, setShowGallery] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [userImage, setUserImage] = useState(image);
   const imageSizes = [
     {
       key: 'square',
@@ -56,50 +56,80 @@ export default function CreatePhotoCollage({ navigation }) {
     },
   ];
 
-  const loadingTexts = [
-    'Gathering your memories...',
-    'Arranging photos beautifully...',
-    'Creating your perfect collage...',
-    'Blending moments together...',
-    'Designing your photo story...',
-    'Crafting a stunning layout...',
-    'Combining images creatively...',
-    'Building your collage masterpiece...',
-    'Styling your photo collection...',
-    'Making every picture shine...',
+  const prompts = [
+    'Add cinematic lighting',
+    'Add dramatic shadows',
+    'Add neon glow effect',
+    'Add realistic rain effect',
+    'Add snow winter atmosphere',
+    'Add luxury golden aesthetic',
+    'Add dreamy pastel tones',
+    'Add vintage film effect',
+    'Add retro 90s aesthetic',
+    'Add cyberpunk neon style',
+    'Add anime art style',
+    'Add Studio Ghibli-inspired look',
+    'Add watercolor painting effect',
+    'Add oil painting texture',
+    'Add realistic fire effects',
+    'Add glowing aura effect',
+    'Add bokeh background blur',
+    'Add depth-of-field effect',
+    'Add cinematic movie color grading',
+    'Add professional studio lighting',
+    'Add fantasy magical atmosphere',
+    'Add futuristic sci-fi background',
+    'Add luxury fashion editorial style',
+    'Add comic-book illustration style',
+    'Add realistic reflections',
+    'Add glossy premium finish',
+    'Add soft aesthetic lighting',
+    'Add sunset golden-hour lighting',
+    'Add moody dark atmosphere',
+    'Add vibrant tropical colors',
+    'Convert into cartoon style',
+    'Convert into realistic 3D render',
+    'Convert into pixel art style',
+    'Convert into sketch drawing',
+    'Convert into clay art style',
+    'Convert into low-poly art',
+    'Convert into fantasy artwork',
+    'Convert into cinematic portrait',
+    'Convert into futuristic avatar',
+    'Remove background cleanly',
+    'Replace background with beach',
+    'Replace background with mountains',
+    'Replace background with city skyline',
+    'Replace background with luxury interior',
+    'Enhance image sharpness',
+    'Enhance facial details',
+    'Enhance overall image quality',
+    'Improve colors and contrast',
+    'Make image ultra realistic',
+    'Make image look professional',
   ];
 
-  const prompts = [
-    'Artistic photo mosaic design',
-    'Asymmetrical artistic composition',
-    'Cinematic movie-poster layout',
-    'Comic-book panel layout',
-    'Cozy travel journal aesthetic',
-    'Dark moody cinematic layout',
-    'Dreamy pastel aesthetic composition',
-    'Dynamic diagonal photo layout',
-    'Editorial fashion collage aesthetic',
-    'Elegant wedding photo collage',
-    'Film-strip inspired composition',
-    'Floating photo card layout',
-    'Geometric photo composition',
-    'Grid-based modern collage layout',
-    'Handcrafted scrapbook arrangement',
-    'Layered paper cutout composition',
-    'Luxury brand campaign aesthetic',
-    'Luxury Instagram collage design',
-    'Minimal clean white-space layout',
-    'Modern Canva-style collage template',
-    'Modern magazine-style collage',
-    'Neon cyberpunk collage style',
-    'Pinterest aesthetic scrapbook style',
-    'Polaroid overlapping photo style',
-    'Premium social media poster design',
-    'Retro vintage memory board style',
-    'Soft beige aesthetic background',
-    'Symmetrical gallery-style arrangement',
-    'Torn paper scrapbook effect',
-    'Vibrant vacation postcard style',
+  const loadingTexts = [
+    'Analyzing your image...',
+    'Applying creative enhancements...',
+    'Transforming your photo beautifully...',
+    'Adding cinematic effects...',
+    'Enhancing colors and lighting...',
+    'Creating stunning visual edits...',
+    'Improving image quality...',
+    'Generating artistic transformations...',
+    'Refining every detail...',
+    'Adding premium visual effects...',
+    'Reimagining your image...',
+    'Applying aesthetic styling...',
+    'Upgrading your photo creatively...',
+    'Crafting your edited masterpiece...',
+    'Enhancing textures and depth...',
+    'Adding realistic lighting effects...',
+    'Building your perfect edit...',
+    'Creating professional-grade visuals...',
+    'Stylizing your image artistically...',
+    'Making your image extraordinary...',
   ];
 
   useEffect(() => {
@@ -119,22 +149,26 @@ export default function CreatePhotoCollage({ navigation }) {
     return () => backHandler.remove();
   }, [loading]);
 
-  const setToastMessage = (message, type) => {
-    Toast.show({
-      type: type,
-      text1: message,
-      position: 'bottom',
-    });
+  const selectMediaOption = option => {
+    setModalVisible(true);
   };
 
-  const selectPrompt = text => {
-    setPrompt(text);
-    setShowMenu(false);
+  const openPicker = async media => {
+    setModalVisible(false);
+    const image = await pickImage({
+      type: media,
+      requestPermissions,
+      setToastMessage,
+    });
+
+    if (!image) return;
+
+    setUserImage(image);
   };
 
   const clearPrompt = () => {
     setSubmitted(false);
-    setPrompt(defaultPrompt);
+    setPrompt('');
   };
 
   const promptChanged = text => {
@@ -142,56 +176,9 @@ export default function CreatePhotoCollage({ navigation }) {
     setPrompt(text);
   };
 
-  const imageSizeSelected = image => {
-    setSelectedImageSize(image.value);
-    setSelectedImage(image.label);
-  };
-
-  const createPhotoCollageClicked = async () => {
-    if (selectedImages.length == 0) {
-      setToastMessage('Please select images to create collage!', 'error');
-    }
-
-    setNewImageUri('');
-    setSubmitted(true);
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      const cleanPrompt = prompt.replace(/\n/g, ' ');
-      formData.append('prompt', cleanPrompt);
-      formData.append('image_size', selectedImageSize);
-      formData.append('user_id', user_id);
-
-      selectedImages.forEach((img, index) => {
-        formData.append('images', {
-          uri: img.uri,
-          type: img.type,
-          name: img.fileName || `image-${index}.jpg`,
-        });
-      });
-      const response = await createCollage(formData);
-      console.log(response.data);
-      setLoading(false);
-      const data = response.data;
-      if (data.success) {
-        setSelectedImages([]);
-        clearImagePrompt();
-        setToastMessage('Image collage created successfully!', 'success');
-        setNewImageUri(data.collage_url);
-      } else {
-        setNewImageUri('');
-        setToastMessage('Failed to create image collage!', 'error');
-      }
-    } catch (error) {
-      setNewImageUri('');
-      console.log(error.message);
-      setLoading(false);
-      setToastMessage('Failed to create image collage!', 'error');
-    }
-  };
-
-  const removeItem = uri => {
-    setSelectedImages(selectedImages.filter(i => i.uri !== uri));
+  const selectPrompt = text => {
+    setPrompt(text);
+    setShowMenu(false);
   };
 
   const clearImagePrompt = () => {
@@ -199,9 +186,52 @@ export default function CreatePhotoCollage({ navigation }) {
     setSubmitted(false);
   };
 
-  const openCustomGallery = () => {
+  const imageSizeSelected = image => {
+    setSelectedImageSize(image.value);
+    setSelectedImage(image.label);
+  };
+
+  const editImageClicked = async () => {
     setNewImageUri('');
-    setShowGallery(true);
+    setSubmitted(true);
+    try {
+      setLoading(true);
+      const formData = new FormData();
+      formData.append('prompt', prompt);
+      formData.append('image_size', selectedImageSize);
+      formData.append('user_id', user_id);
+      formData.append('file', {
+        uri: userImage.url,
+        name: userImage.fileName,
+        type: userImage.type,
+      });
+
+      const response = await editImage(formData);
+      console.log(response.data);
+      setLoading(false);
+      const data = response.data;
+      if (data.success) {
+        setSelectedImages([]);
+        clearImagePrompt();
+        setToastMessage('Image edited successfully!', 'success');
+        setNewImageUri(data.collage_url);
+      } else {
+        setNewImageUri('');
+        setToastMessage('Failed to edit image!', 'error');
+      }
+    } catch (error) {
+      console.log(error.message);
+      setLoading(false);
+      setToastMessage('Failed to edit image!', 'error');
+    }
+  };
+
+  const setToastMessage = (message, type) => {
+    Toast.show({
+      type: type,
+      text1: message,
+      position: 'bottom',
+    });
   };
 
   return (
@@ -212,7 +242,7 @@ export default function CreatePhotoCollage({ navigation }) {
           backgroundColor: colors.primary,
         }}
       />
-      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <StatusBar backgroundColor={colors.primary} barStyle="dark-content" />
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -221,51 +251,33 @@ export default function CreatePhotoCollage({ navigation }) {
           <Ionicons name="arrow-back" size={26} color="#fff" />
         </TouchableOpacity>
 
-        <Text style={styles.title}>AI Collage</Text>
+        <Text style={styles.title}>Edit Image</Text>
       </View>
       <KeyboardAvoidingView
         style={globalStyles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <View style={styles.scroll}>
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          nestedScrollEnabled={true}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.content}>
-            {!loading && !newImageUri && (
-              <FlatList
-                data={selectedImages}
-                numColumns={3}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => removeItem(item.uri)}>
-                    <Image source={{ uri: item.uri }} style={styles.image} />
-
-                    <View style={styles.remove}>
-                      <Text style={{ color: '#fff' }}>✕</Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
+            {loading && <AnimatedTextLoader texts={loadingTexts} />}
+            {!loading && userImage && (
+              <Image
+                source={{
+                  uri: userImage.uri,
+                }}
                 style={{
-                  width: '100%',
-                  flex: 1,
-                }}
-                contentContainerStyle={{
+                  width: '90%',
+                  height: '90%',
                   paddingVertical: 10,
-                  paddingHorizontal: 15,
+                  paddingHorizontal: 10,
                 }}
-                ListEmptyComponent={() => (
-                  <Text
-                    style={{
-                      color: '#003a6b',
-                      textAlign: 'center',
-                      marginTop: 20,
-                      fontFamily: fonts.regular,
-                    }}
-                  >
-                    Please selected images to creaet collage
-                  </Text>
-                )}
+                resizeMode="contain"
               />
             )}
-            {loading && <AnimatedTextLoader texts={loadingTexts} />}
             {!loading && newImageUri && (
               <Image
                 source={{
@@ -281,24 +293,14 @@ export default function CreatePhotoCollage({ navigation }) {
               />
             )}
             <View style={styles.iconRow}>
-              {!loading && selectedImages.length == 0 && (
-                <TouchableOpacity
-                  style={styles.downloadBtn}
-                  onPress={() => openCustomGallery()}
-                >
-                  <Ionicons name="add-outline" size={20} color="white" />
-                </TouchableOpacity>
-              )}
-              {!loading && newImageUri && selectedImages.length > 0 && (
-                <TouchableOpacity
-                  style={styles.downloadBtn}
-                  onPress={() => openCustomGallery()}
-                >
-                  <Ionicons name="create-outline" size={20} color="white" />
-                </TouchableOpacity>
-              )}
+              <TouchableOpacity
+                style={styles.downloadBtn}
+                onPress={() => selectMediaOption()}
+              >
+                <Ionicons name="create-outline" size={20} color="white" />
+              </TouchableOpacity>
               {!loading && newImageUri && (
-                <>
+                <View style={styles.iconRow}>
                   <TouchableOpacity
                     style={styles.downloadBtn}
                     onPress={() => shareImage(newImageUri, setToastMessage)}
@@ -315,7 +317,7 @@ export default function CreatePhotoCollage({ navigation }) {
                       color="white"
                     />
                   </TouchableOpacity>
-                </>
+                </View>
               )}
             </View>
           </View>
@@ -325,6 +327,7 @@ export default function CreatePhotoCollage({ navigation }) {
                 style={[
                   styles.box,
                   selectedImage == item.label && styles.selectedBox,
+                  ,
                   index === 0 && {
                     borderTopLeftRadius: 10,
                     borderBottomLeftRadius: 10,
@@ -355,7 +358,7 @@ export default function CreatePhotoCollage({ navigation }) {
           </View>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Select from menu or enter your own collage style..."
+              placeholder="Describe/select from menu edits like background, lighting, style, colors..."
               multiline
               style={[
                 styles.input,
@@ -383,58 +386,75 @@ export default function CreatePhotoCollage({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.sendButton}
-              onPress={() => createPhotoCollageClicked()}
+              onPress={() => editImageClicked()}
               disabled={loading}
             >
               <Ionicons name="send" size={22} color="#003a6b" />
             </TouchableOpacity>
           </View>
-
-          {showMenu && (
-            <View style={styles.menuWrapper}>
-              <View style={styles.menuContainer}>
-                <ScrollView
-                  style={{ maxHeight: 400 }}
-                  nestedScrollEnabled={true}
-                  showsVerticalScrollIndicator={false}
-                >
-                  {prompts.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={{
-                        paddingVertical: 10,
-                        paddingHorizontal: 16,
-                        borderBottomWidth: index !== prompts.length - 1 ? 1 : 0,
-                        borderBottomColor: '#f2f2f2',
-                      }}
-                      onPress={() => selectPrompt(item)}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          color: '#003a6b',
-                          fontFamily: 'saira-italic',
-                        }}
-                      >
-                        {item}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-                </ScrollView>
-              </View>
-            </View>
-          )}
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
+      {showMenu && (
+        <View style={styles.menuWrapper}>
+          <View style={styles.menuContainer}>
+            <ScrollView
+              style={{ maxHeight: 400 }}
+              nestedScrollEnabled={true}
+              showsVerticalScrollIndicator={false}
+            >
+              {prompts.map((item, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={{
+                    paddingVertical: 10,
+                    paddingHorizontal: 16,
+                    borderBottomWidth: index !== prompts.length - 1 ? 1 : 0,
+                    borderBottomColor: '#f2f2f2',
+                  }}
+                  onPress={() => selectPrompt(item)}
+                >
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      color: '#003a6b',
+                      fontFamily: 'saira-italic',
+                    }}
+                  >
+                    {item}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        </View>
+      )}
       <Toast config={toastConfig} />
-      <CustomGalleryModal
-        selectedImages={selectedImages}
-        setSelectedImages={setSelectedImages}
-        visible={showGallery}
-        onClose={() => setShowGallery(false)}
-        onDone={images => setSelectedImages(images)}
-        selectionLimit={20}
-      />
+      <Modal visible={modalVisible} transparent animationType="slide">
+        <View style={mstyles.overlay}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => setModalVisible(false)}
+          />
+
+          <View style={mstyles.modal}>
+            <Pressable
+              style={mstyles.option}
+              onPress={() => openPicker('CAMERA')}
+            >
+              <Ionicons name="camera" size={26} color="#003a6b" />
+              <Text style={mstyles.text}>Camera</Text>
+            </Pressable>
+
+            <Pressable
+              style={mstyles.option}
+              onPress={() => openPicker('GALLERY')}
+            >
+              <Ionicons name="images" size={26} color="#003a6b" />
+              <Text style={mstyles.text}>Gallery</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </>
   );
 }
@@ -445,7 +465,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   scroll: {
-    flex: 1,
+    flexGrow: 1,
     paddingBottom: 20,
   },
   header: {
@@ -524,7 +544,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
-    zIndex: 9999
+    zIndex: 9999,
   },
   menuContainer: {
     width: '95%',
@@ -546,7 +566,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 12,
-    borderRadius: 10,
   },
   box: {
     flex: 1,
@@ -583,30 +602,57 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  image: {
-    width: screenWidth / 3,
-    height: screenWidth / 3,
-    margin: 2,
-    borderRadius: 5,
-  },
+});
 
-  remove: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: 'red',
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+const mstyles = StyleSheet.create({
+  container: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  subTitle: {
-    color: colors.secondary,
-    fontSize: 15,
-    fontFamily: 'bitter-italic',
-    textAlign: 'justify',
+
+  button: {
+    backgroundColor: '#000',
+    padding: 12,
+    borderRadius: 10,
+  },
+
+  image: {
+    width: 200,
+    height: 200,
+    marginTop: 20,
+    borderRadius: 10,
+  },
+
+  overlay: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+
+  modal: {
+    backgroundColor: '#fff',
     padding: 20,
-    lineHeight: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    gap: 10,
+  },
+
+  text: {
+    fontSize: 14,
+    color: '#003a6b',
+    fontFamily: 'saira-bold',
   },
 });

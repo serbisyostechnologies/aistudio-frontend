@@ -45,3 +45,19 @@ export const updateProjectLikeUnlike = async data => {
 export const deleteProjectById = async data => {
   return await apiClient.post('/projects/delete-project-by-id', data);
 };
+
+export const createCollage = async data => {
+  return await apiClient.post('/projects/create-collage-using-prompt', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const editImage = async data => {
+  return await apiClient.post('/projects/edit-image-using-prompt', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};

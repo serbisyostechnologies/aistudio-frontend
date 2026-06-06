@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-
-import { Text, Animated, StyleSheet } from "react-native";
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Animated, StyleSheet, ActivityIndicator } from 'react-native';
 
 export default function AnimatedTextLoader({
   texts,
@@ -13,7 +12,7 @@ export default function AnimatedTextLoader({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIndex((prev) => (prev === texts.length - 1 ? 0 : prev + 1));
+      setIndex(prev => (prev === texts.length - 1 ? 0 : prev + 1));
     }, 5000);
 
     return () => clearInterval(interval);
@@ -42,25 +41,37 @@ export default function AnimatedTextLoader({
   }, []);
 
   return (
-    <Animated.Text
-      style={[
-        styles.text,
-        textStyle,
-        {
-          opacity: fadeAnim,
-        },
-      ]}
-    >
-      {texts[index]}
-    </Animated.Text>
+    <View style={styles.container}>
+      <ActivityIndicator size="small" color="#000" style={styles.loader} />
+
+      <Animated.Text
+        style={[
+          styles.text,
+          textStyle,
+          {
+            opacity: fadeAnim,
+          },
+        ]}
+      >
+        {texts[index]}
+      </Animated.Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   text: {
     fontSize: 18,
-    fontWeight: "600",
-    color: "#003a6b",
-    fontFamily: "saira-italic",
+    fontWeight: '600',
+    color: '#003a6b',
+    fontFamily: 'saira-italic',
+  },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  loader: {
+    marginRight: 8,
   },
 });

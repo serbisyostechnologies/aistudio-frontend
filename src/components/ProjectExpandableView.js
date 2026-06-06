@@ -115,7 +115,7 @@ const ProjectExapandableView = ({
           <Ionicons
             name={expanded ? 'chevron-up' : 'chevron-down'}
             size={20}
-            color={colors.secondary}
+            color={colors.primary}
           />
         </TouchableOpacity>
         {expanded && (
@@ -230,6 +230,7 @@ const styles = StyleSheet.create({
   card: {
     borderWidth: 1,
     borderColor: '#ddd',
+    marginHorizontal: 10,
     marginBottom: 10,
     borderRadius: 10,
     overflow: 'hidden',
@@ -237,8 +238,8 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 15,
-    backgroundColor: colors.primary,
+    padding: 10,
+    backgroundColor: colors.secondary,
   },
   body: {
     backgroundColor: '#f5f5f5',
@@ -247,11 +248,11 @@ const styles = StyleSheet.create({
   prompt: {
     fontFamily: fonts.bold,
     color: colors.primary,
-    fontSize: 14,
+    fontSize: 13,
   },
   title: {
-    fontSize: 16,
-    color: colors.secondary,
+    fontSize: 15,
+    color: colors.primary,
     fontFamily: fonts.bold,
   },
 
