@@ -20,6 +20,7 @@ import Loader from '../../components/Loader';
 import {
   removeProfilePhotoApi,
   uploadProfilePhotoApi,
+  logoutApi,
 } from '../../api/endPoints';
 import {
   updateProfilePhotoUrl,
@@ -32,6 +33,7 @@ import ProCropper from '../../components/ProCropper';
 export default function ProfileScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
+  const userId = user._id;
   const profilePhoto = useSelector(state => state.auth.user.profile_url);
   const [modalVisible, setModalVisible] = useState(false);
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
@@ -41,6 +43,7 @@ export default function ProfileScreen({ navigation }) {
   const [selectedImageUrl, setSelectedImageUrl] = useState(null);
   const options = [
     { title: 'Edit Profile', icon: 'create-outline', action: 'editProfile' },
+    { title: 'Wallet', icon: 'wallet-outline', action: 'wallet' },
     {
       title: 'Reset Password',
       icon: 'refresh-outline',
@@ -88,11 +91,17 @@ export default function ProfileScreen({ navigation }) {
     setShowLogoutAlert(true);
   };
 
-  const logoutClicked = () => {
+  const logoutClicked = async () => {
     try {
-    } catch (error) {}
-    dispatch(logout());
-    navigation.replace('Welcome');
+      setShowLogoutAlert(false);
+      setLoading(true);
+      const response = await logoutApi({ userId: userId });
+      setLoading(false);
+      dispatch(logout());
+      navigation.replace('Welcome');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onRemovePhotoClicked = async () => {
@@ -355,7 +364,8 @@ const styles = StyleSheet.create({
 
   option: {
     backgroundColor: '#fff',
-    padding: 15,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
     borderRadius: 12,
     flexDirection: 'row',
     justifyContent: 'space-between',

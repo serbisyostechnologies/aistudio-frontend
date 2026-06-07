@@ -9,7 +9,7 @@ export const login = async data => {
   return await apiClient.post('/users/login', data);
 };
 
-export const logout = async data => {
+export const logoutApi = async data => {
   return await apiClient.post('/users/logout', data);
 };
 

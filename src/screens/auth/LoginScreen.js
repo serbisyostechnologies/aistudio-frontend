@@ -176,10 +176,7 @@ export default function LoginScreen({ navigation }) {
 
                 <View style={styles.buttons}>
                   <TouchableOpacity
-                    style={[
-                      styles.button,
-                      selected == 'login' && styles.buttonPressed,
-                    ]}
+                    style={styles.button}
                     activeOpacity={0.9}
                     onPressIn={() => setSelected('login')}
                     onPressOut={() => setSelected('')}
@@ -187,19 +184,13 @@ export default function LoginScreen({ navigation }) {
                     disabled={loading}
                   >
                     <Text
-                      style={[
-                        styles.buttonText,
-                        selected == 'login' && styles.buttonTextPressed,
-                      ]}
+                      style={styles.buttonText}
                     >
                       LOGIN
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    style={[
-                      styles.button,
-                      selected == 'clear' && styles.buttonPressed,
-                    ]}
+                    style={styles.button}
                     activeOpacity={0.9}
                     onPressIn={() => setSelected('clear')}
                     onPressOut={() => setSelected('')}
@@ -207,10 +198,7 @@ export default function LoginScreen({ navigation }) {
                     disabled={loading}
                   >
                     <Text
-                      style={[
-                        styles.buttonText,
-                        selected == 'clear' && styles.buttonTextPressed,
-                      ]}
+                      style={styles.buttonText}
                     >
                       CLEAR
                     </Text>
@@ -323,18 +311,6 @@ const styles = StyleSheet.create({
     color: colors.secondary,
     fontSize: 18,
     fontFamily: 'saira-bold',
-  },
-  buttonTextPressed: {
-    color: colors.secondary,
-    fontSize: 18,
-    fontFamily: fonts.bold,
-  },
-  buttonPressed: {
-    backgroundColor: colors.primary,
-    transform: [{ scale: 0.97 }],
-    opacity: 0.9,
-    borderColor: colors.secondary,
-    borderWidth: 2,
   },
   footer: {
     flexDirection: 'row',

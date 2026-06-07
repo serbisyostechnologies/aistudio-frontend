@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal, View, Text, Pressable, StyleSheet } from 'react-native';
+import { globalStyles, colors, fonts } from '../styles/globalStyles';
 
 export default function CustomAlert({
   visible,
@@ -58,6 +59,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
     color: '#555',
+    fontFamily: fonts.regular,
   },
 
   buttonRow: {
@@ -85,10 +87,12 @@ const styles = StyleSheet.create({
   cancelText: {
     color: '#ffffff',
     fontWeight: '600',
+    fontFamily: fonts.bold,
   },
 
   confirmText: {
     color: '#ffffff',
     fontWeight: '600',
+    fontFamily: fonts.bold,
   },
 });
