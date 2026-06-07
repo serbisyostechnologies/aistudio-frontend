@@ -17,7 +17,7 @@ import { toastConfig } from '../../utils/toastConfig';
 import Loader from '../../components/Loader';
 import { login } from '../../api/endPoints';
 import { useDispatch } from 'react-redux';
-import { loginSuccess } from '../../redux/slices/authSlice';
+import { loginSuccess, updateCredits } from '../../redux/slices/authSlice';
 import { globalStyles, colors, fonts } from '../../styles/globalStyles';
 
 export default function LoginScreen({ navigation }) {
@@ -72,6 +72,7 @@ export default function LoginScreen({ navigation }) {
         const data = response.data;
         if (data.success) {
           if (data.user.is_active) {
+            dispatch(updateCredits(data.user.credits));
             dispatch(
               loginSuccess({
                 user: data.user,

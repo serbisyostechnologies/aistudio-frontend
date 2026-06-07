@@ -6,6 +6,7 @@ const initialState = {
   isLoggedIn: false,
   fcmToken: null,
   deviceId: null,
+  credits: null,
 };
 
 const authSlice = createSlice({
@@ -36,9 +37,12 @@ const authSlice = createSlice({
     },
     updateDeviceId: (state, action) => {
       state.deviceId = action.payload;
+    },
+    updateCredits: (state, action) => {
+      state.credits = action.payload;
     }
   },
 });
 
-export const { loginSuccess, logout, removeToken, updateProfilePhotoUrl, removeProfilePhotoUrl, updateFcmToken, updateDeviceId } = authSlice.actions;
+export const { loginSuccess, logout, removeToken, updateProfilePhotoUrl, removeProfilePhotoUrl, updateFcmToken, updateDeviceId, updateCredits } = authSlice.actions;
 export default authSlice.reducer;

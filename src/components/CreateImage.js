@@ -20,8 +20,11 @@ import { createImage } from '../../src/api/endPoints';
 import { useSelector } from 'react-redux';
 import { shareImage, downloadImage } from '../utils/Utilities';
 import { globalStyles, colors, fonts } from '../styles/globalStyles';
+import { useDispatch } from 'react-redux';
+import { updateCredits } from '../redux/slices/authSlice';
 
 export default function CreateImage({ navigation }) {
+  const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
   const user_id = user._id;
   const [loading, setLoading] = useState(false);
@@ -105,8 +108,10 @@ export default function CreateImage({ navigation }) {
       });
       setLoading(false);
       const data = response.data;
+      console.log(data);
       if (data.success) {
-        clearImagePrompt();
+        dispatch(updateCredits(data.credits));
+        clearPrompt();
         setToastMessage('Image created successfully!', 'success');
         setNewImageUri(data.image_url);
       } else {
@@ -126,11 +131,6 @@ export default function CreateImage({ navigation }) {
     });
   };
 
-  const clearPrompt = () => {
-    setSubmitted(false);
-    setPrompt('');
-  };
-
   const promptChanged = text => {
     setSubmitted(false);
     setPrompt(text);
@@ -141,7 +141,7 @@ export default function CreateImage({ navigation }) {
     setShowMenu(false);
   };
 
-  const clearImagePrompt = () => {
+  const clearPrompt = () => {
     setPrompt('');
     setSubmitted(false);
   };
@@ -291,6 +291,9 @@ export default function CreateImage({ navigation }) {
           {showMenu && (
             <View style={styles.menuWrapper}>
               <View style={styles.menuContainer}>
+                <View style={styles.menuHeading}>
+                  <Text style={styles.headingTitle}>AI Prompts</Text>
+                </View>
                 <ScrollView
                   style={{ maxHeight: 400 }}
                   nestedScrollEnabled={true}
@@ -471,5 +474,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     gap: 10,
+  },
+  headingTitle: {
+    color: colors.secondary,
+    fontFamily: fonts.bold
+  },
+  menuHeading: {
+    backgroundColor: colors.primary,
+    padding: 15,
+    fontSize: 15
   },
 });

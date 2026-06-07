@@ -8,21 +8,24 @@ import RootNavigator from './src/navigation/RootNavigator';
 import { store } from './src/redux/store/store';
 import { persistor } from './src/redux/store/persistStore';
 import { enableScreens } from 'react-native-screens';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const App = () => {
   enableScreens();
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <View style={{ backgroundColor: '#ffffff' }}>
-            <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
-          </View>
-          <RootNavigator />
-        </PersistGate>
-      </Provider>
-    </GestureHandlerRootView>
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <View style={{ backgroundColor: '#ffffff' }}>
+              <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
+            </View>
+            <RootNavigator />
+          </PersistGate>
+        </Provider>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
   );
 };
 

@@ -61,3 +61,11 @@ export const editImage = async data => {
     },
   });
 };
+
+export const analyseImage = async data => {
+  return await apiClient.post('/projects/analyse-image-using-prompt', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};

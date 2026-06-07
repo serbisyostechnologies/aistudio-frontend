@@ -5,8 +5,8 @@
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-        <item name="android:statusBarColor">#ffffff</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">#003a6b</item>
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 </resources>

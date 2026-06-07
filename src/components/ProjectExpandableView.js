@@ -8,6 +8,7 @@ import {
   Image,
   Dimensions,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import { colors, fonts } from '../styles/globalStyles';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -30,6 +31,7 @@ const ProjectExapandableView = ({
   const [likeLoading, setLikeLoading] = useState(false);
   const [disLikeLoading, setDisLikeLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [analysisExpanded, setAnalysisExpanded] = useState(false);
 
   useEffect(() => {
     if (project.image_url) {
@@ -42,6 +44,7 @@ const ProjectExapandableView = ({
   }, [project.image_url]);
 
   const toggleExpand = () => {
+    setAnalysisExpanded(expanded);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     onExpand();
   };
@@ -79,11 +82,11 @@ const ProjectExapandableView = ({
     try {
       updateDeleteLoaders(true);
       const project_id = project._id;
-      const response = await deleteProjectById({project_id});
+      const response = await deleteProjectById({ project_id });
       updateDeleteLoaders(false);
       if (response.data.success) {
         setRefresh(prev => !prev);
-        showMessage("Project deleted successfully!", 'success');
+        showMessage('Project deleted successfully!', 'success');
       } else {
         showMessage('Failed to update!', 'error');
       }
@@ -121,6 +124,38 @@ const ProjectExapandableView = ({
         {expanded && (
           <View style={styles.body}>
             <Text style={styles.prompt}>{project.prompt}</Text>
+            {project.operation == 'Analyse Image' && (
+              <View style={styles.analysisCard}>
+                <TouchableOpacity
+                  style={styles.analysisHeader}
+                  onPress={() => setAnalysisExpanded(!analysisExpanded)}
+                  disabled={disableExpand}
+                  activeOpacity={0.8}
+                >
+                  <Text
+                    style={{ color: colors.secondary, fontFamily: fonts.bold }}
+                  >
+                    Image Analysis Details
+                  </Text>
+                  <Ionicons
+                    name={analysisExpanded ? 'chevron-up' : 'chevron-down'}
+                    size={20}
+                    color={colors.secondary}
+                  />
+                </TouchableOpacity>
+                {analysisExpanded && (
+                  <ScrollView
+                    style={{ maxHeight: 300 }}
+                    nestedScrollEnabled={true}
+                    showsVerticalScrollIndicator={false}
+                  >
+                    <Text style={{ padding: 10, fontFamily: fonts.regular }}>
+                      {project.analysis_text}
+                    </Text>
+                  </ScrollView>
+                )}
+              </View>
+            )}
             <View style={styles.imageContainer}>
               <Image
                 source={{ uri: project.image_url }}
@@ -235,6 +270,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     overflow: 'hidden',
   },
+  analysisCard: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginVertical: 10,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+  analysisHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    backgroundColor: colors.primary,
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -250,6 +298,7 @@ const styles = StyleSheet.create({
     color: colors.primary,
     fontSize: 13,
   },
+
   title: {
     fontSize: 15,
     color: colors.primary,

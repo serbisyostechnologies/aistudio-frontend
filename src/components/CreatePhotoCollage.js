@@ -23,10 +23,14 @@ import { shareImage, downloadImage } from '../utils/Utilities';
 import { globalStyles, colors, fonts } from '../styles/globalStyles';
 import CustomGalleryModal from '../utils/CustomGalleryModal';
 import AnimatedTextLoader from '../components/AnimatedTextLoader';
+import CustomAlert from '../components/CustomAlert';
+import { useDispatch } from 'react-redux';
+import { updateCredits } from '../redux/slices/authSlice';
 
 const screenWidth = Dimensions.get('window').width - 40;
 
 export default function CreatePhotoCollage({ navigation }) {
+  const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
   const user_id = user._id;
   const [loading, setLoading] = useState(false);
@@ -38,6 +42,7 @@ export default function CreatePhotoCollage({ navigation }) {
   const [selectedImage, setSelectedImage] = useState('Square');
   const [selectedImages, setSelectedImages] = useState([]);
   const [showGallery, setShowGallery] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const imageSizes = [
     {
       key: 'square',
@@ -134,7 +139,7 @@ export default function CreatePhotoCollage({ navigation }) {
 
   const clearPrompt = () => {
     setSubmitted(false);
-    setPrompt(defaultPrompt);
+    setPrompt('');
   };
 
   const promptChanged = text => {
@@ -174,8 +179,9 @@ export default function CreatePhotoCollage({ navigation }) {
       setLoading(false);
       const data = response.data;
       if (data.success) {
+        dispatch(updateCredits(data.credits));
         setSelectedImages([]);
-        clearImagePrompt();
+        clearPrompt();
         setToastMessage('Image collage created successfully!', 'success');
         setNewImageUri(data.collage_url);
       } else {
@@ -194,12 +200,8 @@ export default function CreatePhotoCollage({ navigation }) {
     setSelectedImages(selectedImages.filter(i => i.uri !== uri));
   };
 
-  const clearImagePrompt = () => {
-    setPrompt('');
-    setSubmitted(false);
-  };
-
   const openCustomGallery = () => {
+    setShowConfirmation(false);
     setNewImageUri('');
     setShowGallery(true);
   };
@@ -256,11 +258,11 @@ export default function CreatePhotoCollage({ navigation }) {
                     style={{
                       color: '#003a6b',
                       textAlign: 'center',
-                      marginTop: 20,
+                      marginTop: 10,
                       fontFamily: fonts.regular,
                     }}
                   >
-                    Please selected images to creaet collage
+                    Please select images to creaet collage
                   </Text>
                 )}
               />
@@ -292,7 +294,7 @@ export default function CreatePhotoCollage({ navigation }) {
               {!loading && newImageUri && selectedImages.length > 0 && (
                 <TouchableOpacity
                   style={styles.downloadBtn}
-                  onPress={() => openCustomGallery()}
+                  onPress={() => setShowConfirmation(true)}
                 >
                   <Ionicons name="create-outline" size={20} color="white" />
                 </TouchableOpacity>
@@ -393,6 +395,9 @@ export default function CreatePhotoCollage({ navigation }) {
           {showMenu && (
             <View style={styles.menuWrapper}>
               <View style={styles.menuContainer}>
+                <View style={styles.menuHeading}>
+                  <Text style={styles.headingTitle}>AI Prompts</Text>
+                </View>
                 <ScrollView
                   style={{ maxHeight: 400 }}
                   nestedScrollEnabled={true}
@@ -434,6 +439,16 @@ export default function CreatePhotoCollage({ navigation }) {
         onClose={() => setShowGallery(false)}
         onDone={images => setSelectedImages(images)}
         selectionLimit={20}
+      />
+      <CustomAlert
+        visible={showConfirmation}
+        message="Are you sure you want to change the images? Previouse results will be lost."
+        cancelText="CANCEL"
+        confirmText="CHANGE"
+        onCancel={() => setShowConfirmation(false)}
+        onConfirm={() => {
+          openCustomGallery();
+        }}
       />
     </>
   );
@@ -524,7 +539,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
-    zIndex: 9999
+    zIndex: 9999,
   },
   menuContainer: {
     width: '95%',
@@ -608,5 +623,14 @@ const styles = StyleSheet.create({
     textAlign: 'justify',
     padding: 20,
     lineHeight: 20,
+  },
+  headingTitle: {
+    color: colors.secondary,
+    fontFamily: fonts.bold,
+  },
+  menuHeading: {
+    backgroundColor: colors.primary,
+    padding: 15,
+    fontSize: 15,
   },
 });

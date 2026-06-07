@@ -24,8 +24,12 @@ import AnimatedTextLoader from '../components/AnimatedTextLoader';
 import { pickImage } from '../utils/ImagePicker';
 import { requestPermissions } from '../components/RequestPermissions';
 import { editImage } from '../api/endPoints';
+import CustomAlert from '../components/CustomAlert';
+import { useDispatch } from 'react-redux';
+import { updateCredits } from '../redux/slices/authSlice';
 
 export default function EditImage({ navigation, route }) {
+  const dispatch = useDispatch();
   const { image } = route.params;
   const user = useSelector(state => state.auth.user);
   const user_id = user._id;
@@ -38,6 +42,7 @@ export default function EditImage({ navigation, route }) {
   const [selectedImage, setSelectedImage] = useState('Square');
   const [modalVisible, setModalVisible] = useState(false);
   const [userImage, setUserImage] = useState(image);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const imageSizes = [
     {
       key: 'square',
@@ -149,7 +154,8 @@ export default function EditImage({ navigation, route }) {
     return () => backHandler.remove();
   }, [loading]);
 
-  const selectMediaOption = option => {
+  const selectMediaOption = () => {
+    setShowConfirmation(false);
     setModalVisible(true);
   };
 
@@ -166,11 +172,6 @@ export default function EditImage({ navigation, route }) {
     setUserImage(image);
   };
 
-  const clearPrompt = () => {
-    setSubmitted(false);
-    setPrompt('');
-  };
-
   const promptChanged = text => {
     setSubmitted(false);
     setPrompt(text);
@@ -181,7 +182,7 @@ export default function EditImage({ navigation, route }) {
     setShowMenu(false);
   };
 
-  const clearImagePrompt = () => {
+  const clearPrompt = () => {
     setPrompt('');
     setSubmitted(false);
   };
@@ -212,8 +213,8 @@ export default function EditImage({ navigation, route }) {
       setLoading(false);
       const data = response.data;
       if (data.success) {
-        clearImagePrompt();
-        clearImagePrompt();
+        dispatch(updateCredits(data.credits));
+        clearPrompt();
         setToastMessage('Image edited successfully!', 'success');
         setNewImageUri(data.edited_url);
       } else {
@@ -251,7 +252,7 @@ export default function EditImage({ navigation, route }) {
           <Ionicons name="arrow-back" size={26} color="#fff" />
         </TouchableOpacity>
 
-        <Text style={styles.title}>Edit Image</Text>
+        <Text style={styles.title}>AI Edit Image</Text>
       </View>
       <KeyboardAvoidingView
         style={globalStyles.container}
@@ -295,7 +296,7 @@ export default function EditImage({ navigation, route }) {
             <View style={styles.iconRow}>
               <TouchableOpacity
                 style={styles.downloadBtn}
-                onPress={() => selectMediaOption()}
+                onPress={() => setShowConfirmation(true)}
               >
                 <Ionicons name="create-outline" size={20} color="white" />
               </TouchableOpacity>
@@ -397,6 +398,9 @@ export default function EditImage({ navigation, route }) {
       {showMenu && (
         <View style={styles.menuWrapper}>
           <View style={styles.menuContainer}>
+            <View style={styles.menuHeading}>
+              <Text style={styles.headingTitle}>AI Prompts</Text>
+            </View>
             <ScrollView
               style={{ maxHeight: 400 }}
               nestedScrollEnabled={true}
@@ -455,6 +459,16 @@ export default function EditImage({ navigation, route }) {
           </View>
         </View>
       </Modal>
+      <CustomAlert
+        visible={showConfirmation}
+        message="Are you sure you want to change the image? Previouse results will be lost."
+        cancelText="CANCEL"
+        confirmText="CHANGE"
+        onCancel={() => setShowConfirmation(false)}
+        onConfirm={() => {
+          selectMediaOption();
+        }}
+      />
     </>
   );
 }
@@ -601,6 +615,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     gap: 10,
+  },
+  headingTitle: {
+    color: colors.secondary,
+    fontFamily: fonts.bold,
+  },
+  menuHeading: {
+    backgroundColor: colors.primary,
+    padding: 15,
+    fontSize: 15,
   },
 });
 
