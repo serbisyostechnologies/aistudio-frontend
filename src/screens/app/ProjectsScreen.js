@@ -7,6 +7,7 @@ import {
   Platform,
   FlatList,
   Text,
+  Image,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useEffect, useState } from 'react';
@@ -22,7 +23,6 @@ import { toastConfig } from '../../utils/toastConfig';
 
 export default function ProjectScreen({ navigation }) {
   const user = useSelector(state => state.auth.user);
-  console.log(user);
   const fcmToken = useSelector(state => state.auth.fcmToken);
   const deviceId = useSelector(state => state.auth.deviceId);
   const [open, setOpen] = useState(false);
@@ -38,10 +38,6 @@ export default function ProjectScreen({ navigation }) {
       const response = await getAllProjects({ userId });
       setProjects(response.data.projects);
     } catch (error) {
-      console.log('MESSAGE:', error.message);
-      console.log('CODE:', error.code);
-      console.log('RESPONSE:', error.response);
-      console.log('REQUEST:', error.request);
       setLoading(false);
       setProjects([]);
     }
@@ -55,9 +51,7 @@ export default function ProjectScreen({ navigation }) {
         deviceId,
         user_id,
       });
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -117,7 +111,13 @@ export default function ProjectScreen({ navigation }) {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
         <View style={styles.header}>
-          <Text style={styles.subTitle}>AI Serbisyos Studio Workspace</Text>
+          <Image
+            source={require('../../assets/images/logos/home-logo.png')} // adjust path
+            style={styles.logo}
+            resizeMode="contain"
+          />
+
+          <Text style={styles.subTitle}>AI Serbisyos Studio</Text>
         </View>
         <FlatList
           data={projects}
@@ -247,14 +247,21 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: colors.primary,
-    paddingHorizontal: 15,
-    paddingVertical: 20,
+    padding: 15,
     marginBottom: 20,
   },
   subTitle: {
     color: colors.secondary,
     fontSize: 18,
     fontFamily: fonts.bold,
+  },
+  logo: {
+    width: 32,
+    height: 32,
+    marginRight: 10,
+    tintColor: colors.secondary
   },
 });

@@ -196,12 +196,13 @@ export default function EditImage({ navigation, route }) {
     setSubmitted(true);
     try {
       setLoading(true);
+      console.log(userImage);
       const formData = new FormData();
       formData.append('prompt', prompt);
       formData.append('image_size', selectedImageSize);
       formData.append('user_id', user_id);
-      formData.append('file', {
-        uri: userImage.url,
+      formData.append('userImage', {
+        uri: userImage.uri,
         name: userImage.fileName,
         type: userImage.type,
       });
@@ -211,16 +212,15 @@ export default function EditImage({ navigation, route }) {
       setLoading(false);
       const data = response.data;
       if (data.success) {
-        setSelectedImages([]);
+        clearImagePrompt();
         clearImagePrompt();
         setToastMessage('Image edited successfully!', 'success');
-        setNewImageUri(data.collage_url);
+        setNewImageUri(data.edited_url);
       } else {
         setNewImageUri('');
         setToastMessage('Failed to edit image!', 'error');
       }
     } catch (error) {
-      console.log(error.message);
       setLoading(false);
       setToastMessage('Failed to edit image!', 'error');
     }
@@ -242,7 +242,7 @@ export default function EditImage({ navigation, route }) {
           backgroundColor: colors.primary,
         }}
       />
-      <StatusBar backgroundColor={colors.primary} barStyle="dark-content" />
+      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -264,7 +264,7 @@ export default function EditImage({ navigation, route }) {
         >
           <View style={styles.content}>
             {loading && <AnimatedTextLoader texts={loadingTexts} />}
-            {!loading && userImage && (
+            {!loading && !newImageUri && userImage && (
               <Image
                 source={{
                   uri: userImage.uri,
@@ -300,7 +300,7 @@ export default function EditImage({ navigation, route }) {
                 <Ionicons name="create-outline" size={20} color="white" />
               </TouchableOpacity>
               {!loading && newImageUri && (
-                <View style={styles.iconRow}>
+                <>
                   <TouchableOpacity
                     style={styles.downloadBtn}
                     onPress={() => shareImage(newImageUri, setToastMessage)}
@@ -317,7 +317,7 @@ export default function EditImage({ navigation, route }) {
                       color="white"
                     />
                   </TouchableOpacity>
-                </View>
+                </>
               )}
             </View>
           </View>
