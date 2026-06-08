@@ -1,9 +1,8 @@
 import axios from "axios";
-import { PUBLIC_API_URL } from '@env';
+import config from '../config/environment';
 
-console.log("PUBLIC_API_URL: ", PUBLIC_API_URL);
 const apiClient = axios.create({
-  baseURL: "http://192.168.1.3:8000/api/v1",
+  baseURL: config.PUBLIC_API_URL,
   headers: {
     "Content-Type": "application/json",
   },

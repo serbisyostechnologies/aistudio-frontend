@@ -175,7 +175,6 @@ export default function CreatePhotoCollage({ navigation }) {
         });
       });
       const response = await createCollage(formData);
-      console.log(response.data);
       setLoading(false);
       const data = response.data;
       if (data.success) {
@@ -190,7 +189,6 @@ export default function CreatePhotoCollage({ navigation }) {
       }
     } catch (error) {
       setNewImageUri('');
-      console.log(error.message);
       setLoading(false);
       setToastMessage('Failed to create image collage!', 'error');
     }

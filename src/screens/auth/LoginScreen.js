@@ -89,7 +89,6 @@ export default function LoginScreen({ navigation }) {
           setToastMessage(data.message, 'error');
         }
       } catch (error) {
-        console.log(error);
         setLoading(false);
         setToastMessage('Failed to login!', 'error');
       }

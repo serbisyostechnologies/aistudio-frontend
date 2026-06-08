@@ -11,7 +11,7 @@ import {
   ScrollView,
   ImageBackground,
   Modal,
-  Pressable
+  Pressable,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useCallback, useEffect, useState } from 'react';
@@ -102,8 +102,9 @@ export default function ProjectScreen({ navigation }) {
         try {
           const userId = user._id;
           const response = await getAllProjects({ userId });
-          console.log(response.data.projects);
           setCreations(response.data.projects);
+        } catch (error) {
+          console.log(error.message);
         } finally {
           setLoading(false);
         }
@@ -136,7 +137,6 @@ export default function ProjectScreen({ navigation }) {
   }, []);
 
   const toolCardClicked = cardUrl => {
-    console.log('Card URL: ', cardUrl);
     switch (cardUrl) {
       case 'CreateImage':
         navigation.push(cardUrl);
@@ -152,12 +152,12 @@ export default function ProjectScreen({ navigation }) {
   };
 
   const setToastMessage = (message, type) => {
-      Toast.show({
-        type: type,
-        text1: message,
-        position: 'bottom',
-      });
-    };
+    Toast.show({
+      type: type,
+      text1: message,
+      position: 'bottom',
+    });
+  };
 
   const openPicker = async media => {
     setModalVisible(false);
@@ -506,7 +506,7 @@ const styles = StyleSheet.create({
 
   toolCard: {
     width: 160,
-    height: 220,
+    height: 200,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.primary,
@@ -534,14 +534,14 @@ const styles = StyleSheet.create({
   },
 
   cardTitle: {
-    fontSize: 17,
+    fontSize: 16,
     color: colors.secondary,
     marginBottom: 6,
     fontFamily: fonts.bold,
   },
 
   description: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.secondary,
     lineHeight: 20,
     fontFamily: fonts.regular,

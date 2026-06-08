@@ -10,7 +10,6 @@ export default function NetworkError() {
         await Linking.openSettings();
       }
     } catch (error) {
-      console.log(error);
       Alert.alert("Unable to open settings");
     }
   };

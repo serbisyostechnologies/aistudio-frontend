@@ -27,7 +27,6 @@ export const requestUserPermission = async () => {
       authStatus === AuthorizationStatus.AUTHORIZED ||
       authStatus === AuthorizationStatus.PROVISIONAL;
     if (enabled) {
-      console.log('Notification permission granted');
       return true;
     }
     return false;

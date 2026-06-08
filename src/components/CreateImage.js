@@ -108,7 +108,6 @@ export default function CreateImage({ navigation }) {
       });
       setLoading(false);
       const data = response.data;
-      console.log(data);
       if (data.success) {
         dispatch(updateCredits(data.credits));
         clearPrompt();

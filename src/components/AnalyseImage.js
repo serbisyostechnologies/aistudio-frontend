@@ -168,7 +168,6 @@ export default function AnalyseImage({ navigation, route }) {
       });
 
       const response = await analyseImage(formData);
-      console.log(response.data);
       setLoading(false);
       const data = response.data;
       if (data.success) {

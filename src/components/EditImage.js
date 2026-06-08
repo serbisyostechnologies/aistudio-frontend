@@ -197,7 +197,6 @@ export default function EditImage({ navigation, route }) {
     setSubmitted(true);
     try {
       setLoading(true);
-      console.log(userImage);
       const formData = new FormData();
       formData.append('prompt', prompt);
       formData.append('image_size', selectedImageSize);
@@ -209,7 +208,6 @@ export default function EditImage({ navigation, route }) {
       });
 
       const response = await editImage(formData);
-      console.log(response.data);
       setLoading(false);
       const data = response.data;
       if (data.success) {
