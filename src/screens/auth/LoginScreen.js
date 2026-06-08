@@ -135,7 +135,7 @@ export default function LoginScreen({ navigation }) {
               <View style={styles.card}>
                 <Text style={globalStyles.label}>Email/Mobile Number</Text>
                 <TextInput
-                  placeholder="Mobile number or email address"
+                  placeholder="Mobile n]umber or email address"
                   style={globalStyles.input}
                   keyboardType="email-address"
                   autoCapitalize="none"

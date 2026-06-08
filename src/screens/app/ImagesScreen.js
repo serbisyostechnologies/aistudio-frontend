@@ -219,8 +219,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'bitter-italic',
     textAlign: 'justify',
-    padding: 20,
+    paddingHorizontal: 20,
     lineHeight: 20,
+    paddingTop: 10,
+    paddingBottom: 20
   },
   row: {
     flex: 1,
@@ -301,7 +303,8 @@ const mstyles = StyleSheet.create({
 
   modal: {
     backgroundColor: '#fff',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 10,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
@@ -315,7 +318,7 @@ const mstyles = StyleSheet.create({
   option: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 10,
     gap: 10,
   },
 

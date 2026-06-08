@@ -12,6 +12,7 @@ import {
   ImageBackground,
   Modal,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useCallback, useEffect, useState } from 'react';
@@ -28,6 +29,7 @@ import { pickImage } from '../../utils/ImagePicker';
 import { requestPermissions } from '../../components/RequestPermissions';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../utils/toastConfig';
+import Video from 'react-native-video';
 
 export default function ProjectScreen({ navigation }) {
   const user = useSelector(state => state.auth.user);
@@ -46,13 +48,17 @@ export default function ProjectScreen({ navigation }) {
       title: 'AI Image',
       description: 'Generate stunning AI images',
       url: 'CreateImage',
+      iconColor1: '#7C3AED',
+      iconColor2: '#A855F7',
     },
     {
       id: 2,
       icon: 'grid-outline',
       title: 'Create Collage',
-      description: 'Arrange and merge multiple images',
+      description: 'Arrange multiple images',
       url: 'CreatePhotoCollage',
+      iconColor1: '#FF7E5F',
+      iconColor2: '#FEB47B',
     },
     {
       id: 3,
@@ -60,6 +66,8 @@ export default function ProjectScreen({ navigation }) {
       title: 'Edit Image',
       description: 'Edit and refine images with AI',
       url: 'EDIT',
+      iconColor1: '#2563EB',
+      iconColor2: '#3B82F6',
     },
     {
       id: 4,
@@ -67,6 +75,8 @@ export default function ProjectScreen({ navigation }) {
       title: 'Analyse Image',
       description: 'Analyze images with smart AI',
       url: 'ANALYSE',
+      iconColor1: '#16A34A',
+      iconColor2: '#22C55E',
     },
     {
       id: 5,
@@ -74,6 +84,8 @@ export default function ProjectScreen({ navigation }) {
       title: 'AI Video',
       description: 'Generate videos with AI',
       url: '',
+      iconColor1: '#f26a8d',
+      iconColor2: '#f49cbb',
     },
     {
       id: 6,
@@ -81,6 +93,8 @@ export default function ProjectScreen({ navigation }) {
       title: 'Edit Video',
       description: 'AI tools for fast video editing',
       url: '',
+      iconColor1: '#e3170a',
+      iconColor2: '#e16036',
     },
     {
       id: 7,
@@ -88,6 +102,8 @@ export default function ProjectScreen({ navigation }) {
       title: 'Analyse Video',
       description: 'Get AI-powered video analysis',
       url: '',
+      iconColor1: '#2a850e',
+      iconColor2: '#27a300',
     },
   ];
 
@@ -100,10 +116,14 @@ export default function ProjectScreen({ navigation }) {
     useCallback(() => {
       const fetchProjects = async () => {
         try {
+          setLoading(true);
+          setCreations([]);
           const userId = user._id;
           const response = await getAllProjects({ userId });
+          setLoading(false);
           setCreations(response.data.projects);
         } catch (error) {
+          setLoading(false);
           console.log(error.message);
         } finally {
           setLoading(false);
@@ -180,9 +200,12 @@ export default function ProjectScreen({ navigation }) {
       activeOpacity={0.9}
       onPress={() => onPress(item.url)}
     >
-      <View style={styles.iconContainer}>
+      <LinearGradient
+        colors={[item.iconColor1, item.iconColor2]}
+        style={styles.iconContainer}
+      >
         <Ionicons name={item.icon} size={30} color={colors.secondary} />
-      </View>
+      </LinearGradient>
       <Text style={styles.cardTitle}>{item.title}</Text>
       <Text style={styles.description}>{item.description}</Text>
     </TouchableOpacity>
@@ -191,16 +214,26 @@ export default function ProjectScreen({ navigation }) {
   const CreationCard = ({ item }) => {
     return (
       <TouchableOpacity activeOpacity={0.9}>
-        <LinearGradient
-          colors={['#111633', '#0B0F26']}
-          style={styles.creationCard}
-        >
-          <Image
-            source={{
-              uri: item.image_url,
-            }}
-            style={styles.image}
-          />
+        <View style={styles.creationCard}>
+          {item.operation.toLowerCase().includes('image') ? (
+            <Image
+              source={{
+                uri: item.image_url,
+              }}
+              style={styles.image}
+            />
+          ) : (
+            <View style={styles.videoContainer}>
+              <Video
+                source={{
+                  uri: item.image_url,
+                }}
+                style={styles.video}
+                resizeMode="cover"
+                controls
+              />
+            </View>
+          )}
 
           <View style={styles.footer}>
             <View style={{ flex: 1 }}>
@@ -216,7 +249,7 @@ export default function ProjectScreen({ navigation }) {
               />
             </TouchableOpacity>
           </View>
-        </LinearGradient>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -244,7 +277,7 @@ export default function ProjectScreen({ navigation }) {
             <Text style={styles.subTitle}>AI Serbisyos Studio</Text>
 
             <TouchableOpacity style={styles.circle}>
-              <Ionicons name="diamond-outline" size={15} color="#fff" />
+              <Ionicons name="trophy" size={15} color="#fff" />
             </TouchableOpacity>
           </View>
           <View style={{ flex: 1 }}>
@@ -274,7 +307,7 @@ export default function ProjectScreen({ navigation }) {
                   contentContainerStyle={styles.listContainer}
                 />
                 <View style={styles.toolContainer}>
-                  <Text style={[styles.toolTitle, { marginTop: 10 }]}>
+                  <Text style={[styles.toolTitle, { marginTop: 5 }]}>
                     Recent Creations
                   </Text>
                 </View>
@@ -299,6 +332,14 @@ export default function ProjectScreen({ navigation }) {
                       see them here.
                     </Text>
                   )}
+                  ListFooterComponent={
+                    loading ? (
+                      <ActivityIndicator
+                        size="large"
+                        style={{ marginVertical: 20 }}
+                      />
+                    ) : null
+                  }
                 />
               </ScrollView>
               <View style={styles.cardContainer}>
@@ -443,10 +484,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 28,
     right: 15,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 1,
+    width: 35,
+    height: 35,
+    borderRadius: 17.5,
+    borderWidth: 2,
     borderColor: colors.secondary,
     justifyContent: 'center',
     alignItems: 'center',
@@ -505,8 +546,8 @@ const styles = StyleSheet.create({
   },
 
   toolCard: {
-    width: 160,
-    height: 200,
+    width: 140,
+    height: 170,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: colors.primary,
@@ -524,26 +565,26 @@ const styles = StyleSheet.create({
   },
 
   iconContainer: {
-    width: 75,
-    height: 75,
+    width: 55,
+    height: 55,
     borderRadius: 18,
     backgroundColor: '#385f88',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 10,
   },
 
   cardTitle: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.secondary,
-    marginBottom: 6,
+    marginBottom: 4,
     fontFamily: fonts.bold,
   },
 
   description: {
-    fontSize: 13,
+    fontSize: 12,
     color: colors.secondary,
-    lineHeight: 20,
+    lineHeight: 15,
     fontFamily: fonts.regular,
     textAlign: 'center',
   },
@@ -552,11 +593,12 @@ const styles = StyleSheet.create({
     width: 160,
     borderRadius: 18,
     marginRight: 12,
+    backgroundColor: colors.primary,
   },
 
   image: {
     width: '100%',
-    height: 170,
+    height: 150,
     borderTopLeftRadius: 14,
     borderTopRightRadius: 14,
   },
@@ -571,15 +613,25 @@ const styles = StyleSheet.create({
 
   creationTitle: {
     color: colors.secondary,
-    fontSize: 16,
+    fontSize: 14,
     fontFamily: fonts.bold,
   },
 
   time: {
     color: colors.secondary,
-    fontSize: 13,
+    fontSize: 12,
     marginTop: 2,
     fontFamily: fonts.regular,
+  },
+  videoContainer: {
+    width: 160,
+    height: 150,
+    borderRadius: 16,
+    overflow: 'hidden', // 🔥 IMPORTANT
+  },
+  video: {
+    width: '100%',
+    height: '100%',
   },
 });
 

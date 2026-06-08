@@ -6,7 +6,7 @@ export default function Loader({ visible = false }) {
     <Modal transparent visible={visible} animationType="fade">
       <View style={styles.container}>
         <View style={styles.loaderBox}>
-          <ActivityIndicator size="large" color="#a7b4c0" style={{ transform: [{ scale: 1.8 }] }}/>
+          <ActivityIndicator size="large" color="#a7b4c0" style={{ transform: [{ scale: 1.2 }] }}/>
         </View>
       </View>
     </Modal>

@@ -34,7 +34,7 @@ export default function ProfileScreen({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
   const userId = user._id;
-  const profilePhoto = useSelector(state => state.auth.user.profile_url);
+  const profilePhoto = user.profile_url;
   const [modalVisible, setModalVisible] = useState(false);
   const [showLogoutAlert, setShowLogoutAlert] = useState(false);
   const [cropModalVisible, setCropModalVisible] = useState(false);

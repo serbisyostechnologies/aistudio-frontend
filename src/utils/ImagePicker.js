@@ -2,6 +2,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 export const pickImage = async ({
   type = 'GALLERY',
+  fileType = 'image',
   requestPermissions,
   setToastMessage,
 }) => {
@@ -17,13 +18,13 @@ export const pickImage = async ({
 
     if (type === 'CAMERA') {
       result = await launchCamera({
-        mediaType: 'photo',
+        mediaType: fileType,
         quality: 1,
         saveToPhotos: true,
       });
     } else {
       result = await launchImageLibrary({
-        mediaType: 'photo',
+        mediaType: fileType,
         quality: 1,
       });
     }

@@ -33,7 +33,7 @@ export default function TabNavigator({ navigation }) {
             height: 60,
           },
           tabBarLabelStyle: {
-            fontSize: 14,
+            fontSize: 13,
             fontFamily: 'saira-bold',
           },
           tabBarActiveBackgroundColor: '#fff',
@@ -87,7 +87,7 @@ export default function TabNavigator({ navigation }) {
                 onPress={() => setOpen(!open)}
               >
                 <View style={styles.fab}>
-                  <Ionicons name="add" size={35} color={colors.secondary} />
+                  <Ionicons name="add" size={30} color={colors.secondary} />
                 </View>
               </TouchableOpacity>
             ),
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   fabContainer: {
     position: 'absolute',
     alignSelf: 'center',
-    top: -25,
+    top: -15,
   },
 
   fab: {
@@ -151,13 +151,13 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.2,
     shadowRadius: 8,
-    borderWidth: 8,
+    borderWidth: 5,
     borderColor: colors.secondary,
   },
 
   menuContainer: {
     position: 'absolute',
-    bottom: 95,
+    bottom: 85,
     alignSelf: 'center',
     flexDirection: 'row',
     backgroundColor: colors.secondary,

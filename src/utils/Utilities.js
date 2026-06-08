@@ -17,13 +17,13 @@ export const formatDate = isoString => {
   return `${dd}-${mm}-${yyyy} ${HH}:${MM}:${SS}`;
 };
 
-export const shareImage = async (imageUrl, showMessage) => {
+export const shareImage = async (imageUrl, showMessage, fileType = "image") => {
   try {
     if (!imageUrl) {
       return;
     }
 
-    const fileName = `AI_Image_${Date.now()}.jpg`;
+    const fileName = `AI_${fileType == 'image' ? 'Image' : 'Video'}_${Date.now()}.${fileType == 'image' ? 'jpg' : 'mp4'}`;
     const path = `${RNFS.CachesDirectoryPath}/${fileName}`;
 
     const download = RNFS.downloadFile({
@@ -42,16 +42,16 @@ export const shareImage = async (imageUrl, showMessage) => {
       url: 'file://' + path,
       type: 'image/jpeg',
       failOnCancel: false,
-      message: 'Check out this AI-generated image using AISerbisyosStudio App',
+      message: `Check out this AI-generated ${fileType} using AISerbisyosStudio App`,
     });
   } catch (error) {
     showMessage(error.message, "error");
   }
 };
 
-export const downloadImage = async (imageUrl, showMessage) => {
+export const downloadImage = async (imageUrl, showMessage, fileType = "Image") => {
   try {
-    const fileName = `AI_Image_${Date.now()}.jpg`;
+    const fileName = `AI_${fileType == 'image' ? 'Image' : 'Video'}_${Date.now()}.${fileType == 'image' ? 'jpg' : 'mp4'}`;
     const path = `${RNFS.DownloadDirectoryPath}/${fileName}`;
     const download = RNFS.downloadFile({
       fromUrl: imageUrl,
@@ -62,7 +62,7 @@ export const downloadImage = async (imageUrl, showMessage) => {
     if (result.statusCode === 200) {
       showMessage('Image savd at ' + path, 'success');
     } else {
-      showMessage('Failed to save image', 'error');
+      showMessage(`Failed to save ${fileType}`, 'error');
     }
   } catch (error) {
     showMessage(error.message, "error");

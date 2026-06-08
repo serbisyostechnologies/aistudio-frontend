@@ -29,7 +29,7 @@ export const updateDeviceIdentitiesApi = async data => {
   return await apiClient.post('/users/update-device-identities', data);
 };
 
-//Project end points
+//Project image end points
 export const createImage = async data => {
   return await apiClient.post('/projects/create-image-using-prompt', data);
 };
@@ -68,4 +68,9 @@ export const analyseImage = async data => {
       'Content-Type': 'multipart/form-data',
     },
   });
+};
+
+//Project video end points
+export const createVideo = async data => {
+  return await apiClient.post('/projects/create-video-using-prompt', data);
 };

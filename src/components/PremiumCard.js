@@ -22,8 +22,8 @@ const PremiumCard = ({ credits }) => {
         </Text>
         <Text style={styles.subtitle}>
           {credits
-            ? 'You have received 10 free credits. Start exploring premium features now.'
-            : 'Get more credits to unlock uninterrupted access and continue creating without limits.'}
+            ? 'You have received 100 free credits.'
+            : 'Get more credits to continue creating without limits.'}
         </Text>
       </View>
 
@@ -74,14 +74,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    padding: 10,
     borderRadius: 20,
   },
   buttonText: {
     color: colors.primary,
-    fontWeight: '600',
     marginRight: 5,
     fontFamily: fonts.bold,
+    fontSize: 12
   },
 });

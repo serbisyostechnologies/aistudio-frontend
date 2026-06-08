@@ -13,18 +13,18 @@ import {
   Modal,
   Pressable,
 } from 'react-native';
-import { globalStyles, colors, fonts } from '../styles/globalStyles';
+import { globalStyles, colors, fonts } from '../../styles/globalStyles';
 import { useState, useEffect } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Toast from 'react-native-toast-message';
-import { toastConfig } from '../../src/utils/toastConfig';
+import { toastConfig } from '../../utils/toastConfig';
 import { useDispatch, useSelector } from 'react-redux';
-import AnimatedTextLoader from '../components/AnimatedTextLoader';
-import { pickImage } from '../utils/ImagePicker';
-import { requestPermissions } from '../components/RequestPermissions';
+import AnimatedTextLoader from '../AnimatedTextLoader';
+import { pickImage } from '../../utils/ImagePicker';
+import { requestPermissions } from '../RequestPermissions';
 import { analyseImage } from '../api/endPoints';
-import CustomAlert from '../components/CustomAlert';
-import { updateCredits } from '../redux/slices/authSlice';
+import CustomAlert from '../CustomAlert';
+import { updateCredits } from '../../redux/slices/authSlice';
 
 export default function AnalyseImage({ navigation, route }) {
   const dispatch = useDispatch();

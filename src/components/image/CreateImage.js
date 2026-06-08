@@ -8,41 +8,32 @@ import {
   Platform,
   ScrollView,
   BackHandler,
-  StatusBar,
-  FlatList,
   Image,
-  Dimensions,
+  StatusBar,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useState, useEffect } from 'react';
 import Toast from 'react-native-toast-message';
-import { toastConfig } from '../../src/utils/toastConfig';
-import { createCollage } from '../../src/api/endPoints';
+import { toastConfig } from '../../../src/utils/toastConfig';
+import AnimatedTextLoader from '../AnimatedTextLoader';
+import { createImage } from '../../src/api/endPoints';
 import { useSelector } from 'react-redux';
-import { shareImage, downloadImage } from '../utils/Utilities';
-import { globalStyles, colors, fonts } from '../styles/globalStyles';
-import CustomGalleryModal from '../utils/CustomGalleryModal';
-import AnimatedTextLoader from '../components/AnimatedTextLoader';
-import CustomAlert from '../components/CustomAlert';
+import { shareImage, downloadImage } from '../../utils/Utilities';
+import { globalStyles, colors, fonts } from '../../styles/globalStyles';
 import { useDispatch } from 'react-redux';
-import { updateCredits } from '../redux/slices/authSlice';
+import { updateCredits } from '../../redux/slices/authSlice';
 
-const screenWidth = Dimensions.get('window').width - 40;
-
-export default function CreatePhotoCollage({ navigation }) {
+export default function CreateImage({ navigation }) {
   const dispatch = useDispatch();
   const user = useSelector(state => state.auth.user);
   const user_id = user._id;
   const [loading, setLoading] = useState(false);
-  const [prompt, setPrompt] = useState();
+  const [prompt, setPrompt] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [newImageUri, setNewImageUri] = useState('');
   const [selectedImageSize, setSelectedImageSize] = useState('1024x1024');
   const [selectedImage, setSelectedImage] = useState('Square');
-  const [selectedImages, setSelectedImages] = useState([]);
-  const [showGallery, setShowGallery] = useState(false);
-  const [showConfirmation, setShowConfirmation] = useState(false);
   const imageSizes = [
     {
       key: 'square',
@@ -62,49 +53,26 @@ export default function CreatePhotoCollage({ navigation }) {
   ];
 
   const loadingTexts = [
-    'Gathering your memories...',
-    'Arranging photos beautifully...',
-    'Creating your perfect collage...',
-    'Blending moments together...',
-    'Designing your photo story...',
-    'Crafting a stunning layout...',
-    'Combining images creatively...',
-    'Building your collage masterpiece...',
-    'Styling your photo collection...',
-    'Making every picture shine...',
+    'Dreaming in pixels...',
+    'Building your imagination...',
+    'Turning ideas into art...',
+    'Creating something amazing...',
+    'Visualizing your prompt...',
   ];
 
   const prompts = [
-    'Artistic photo mosaic design',
-    'Asymmetrical artistic composition',
-    'Cinematic movie-poster layout',
-    'Comic-book panel layout',
-    'Cozy travel journal aesthetic',
-    'Dark moody cinematic layout',
-    'Dreamy pastel aesthetic composition',
-    'Dynamic diagonal photo layout',
-    'Editorial fashion collage aesthetic',
-    'Elegant wedding photo collage',
-    'Film-strip inspired composition',
-    'Floating photo card layout',
-    'Geometric photo composition',
-    'Grid-based modern collage layout',
-    'Handcrafted scrapbook arrangement',
-    'Layered paper cutout composition',
-    'Luxury brand campaign aesthetic',
-    'Luxury Instagram collage design',
-    'Minimal clean white-space layout',
-    'Modern Canva-style collage template',
-    'Modern magazine-style collage',
-    'Neon cyberpunk collage style',
-    'Pinterest aesthetic scrapbook style',
-    'Polaroid overlapping photo style',
-    'Premium social media poster design',
-    'Retro vintage memory board style',
-    'Soft beige aesthetic background',
-    'Symmetrical gallery-style arrangement',
-    'Torn paper scrapbook effect',
-    'Vibrant vacation postcard style',
+    'A majestic dragon flying over snowy mountains at sunset',
+    'A magical forest with glowing trees and floating lights',
+    'A futuristic cyberpunk city with neon lights and flying cars',
+    'An astronaut walking on Mars with Earth visible in the sky',
+    'A peaceful lake surrounded by mountains during sunrise',
+    'A tropical beach with crystal clear water and palm trees',
+    'A realistic portrait of a warrior queen wearing golden armor',
+    'A smiling child in a colorful raincoat standing in the rain',
+    'Anime boy standing under cherry blossoms in Tokyo',
+    'Cute cartoon cat wearing sunglasses and a hoodie',
+    'A panda working on a laptop in a modern office',
+    'A tiny village inside a glass bottle',
   ];
 
   useEffect(() => {
@@ -124,6 +92,36 @@ export default function CreatePhotoCollage({ navigation }) {
     return () => backHandler.remove();
   }, [loading]);
 
+  const createImageClicked = async () => {
+    setNewImageUri('');
+    setSubmitted(true);
+    if (!prompt.trim()) {
+      setToastMessage('Please enter image description to create!', 'error');
+      return;
+    }
+    try {
+      setLoading(true);
+      const response = await createImage({
+        prompt,
+        user_id,
+        image_size: selectedImageSize,
+      });
+      setLoading(false);
+      const data = response.data;
+      if (data.success) {
+        dispatch(updateCredits(data.credits));
+        clearPrompt();
+        setToastMessage('Image created successfully!', 'success');
+        setNewImageUri(data.image_url);
+      } else {
+        setToastMessage('Failed to create image!', 'error');
+      }
+    } catch (error) {
+      setLoading(false);
+      setToastMessage('Failed to create image!', 'error');
+    }
+  };
+
   const setToastMessage = (message, type) => {
     Toast.show({
       type: type,
@@ -132,76 +130,24 @@ export default function CreatePhotoCollage({ navigation }) {
     });
   };
 
+  const promptChanged = text => {
+    setSubmitted(false);
+    setPrompt(text);
+  };
+
   const selectPrompt = text => {
     setPrompt(text);
     setShowMenu(false);
   };
 
   const clearPrompt = () => {
-    setSubmitted(false);
     setPrompt('');
-  };
-
-  const promptChanged = text => {
     setSubmitted(false);
-    setPrompt(text);
   };
 
   const imageSizeSelected = image => {
     setSelectedImageSize(image.value);
     setSelectedImage(image.label);
-  };
-
-  const createPhotoCollageClicked = async () => {
-    if (selectedImages.length == 0) {
-      setToastMessage('Please select images to create collage!', 'error');
-    }
-
-    setNewImageUri('');
-    setSubmitted(true);
-    try {
-      setLoading(true);
-      const formData = new FormData();
-      const cleanPrompt = prompt.replace(/\n/g, ' ');
-      formData.append('prompt', cleanPrompt);
-      formData.append('image_size', selectedImageSize);
-      formData.append('user_id', user_id);
-
-      selectedImages.forEach((img, index) => {
-        formData.append('images', {
-          uri: img.uri,
-          type: img.type,
-          name: img.fileName || `image-${index}.jpg`,
-        });
-      });
-      const response = await createCollage(formData);
-      setLoading(false);
-      const data = response.data;
-      if (data.success) {
-        dispatch(updateCredits(data.credits));
-        setSelectedImages([]);
-        clearPrompt();
-        setToastMessage('Image collage created successfully!', 'success');
-        setNewImageUri(data.collage_url);
-      } else {
-        setNewImageUri('');
-        setToastMessage('Failed to create image collage!', 'error');
-      }
-    } catch (error) {
-      setNewImageUri('');
-      setLoading(false);
-      setToastMessage('Failed to create image collage!', 'error');
-    }
-  };
-
-  const removeItem = uri => {
-    setSelectedImages(selectedImages.filter(i => i.uri !== uri));
-  };
-
-  const openCustomGallery = () => {
-    setShowConfirmation(false);
-    setNewImageUri('');
-    setShowGallery(true);
   };
 
   return (
@@ -212,7 +158,7 @@ export default function CreatePhotoCollage({ navigation }) {
           backgroundColor: colors.primary,
         }}
       />
-      <StatusBar backgroundColor={colors.primary} barStyle="light-content" />
+      <StatusBar backgroundColor={colors.primary} barStyle="dark-content" />
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}
@@ -221,49 +167,33 @@ export default function CreatePhotoCollage({ navigation }) {
           <Ionicons name="arrow-back" size={26} color="#fff" />
         </TouchableOpacity>
 
-        <Text style={styles.title}>AI Collage</Text>
+        <Text style={styles.title}>AI Image</Text>
       </View>
       <KeyboardAvoidingView
         style={globalStyles.container}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <View style={styles.scroll}>
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          nestedScrollEnabled={true}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.content}>
-            {!loading && !newImageUri && (
-              <FlatList
-                data={selectedImages}
-                numColumns={3}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => removeItem(item.uri)}>
-                    <Image source={{ uri: item.uri }} style={styles.image} />
-
-                    <View style={styles.remove}>
-                      <Text style={{ color: '#fff' }}>✕</Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-                style={{
-                  width: '100%',
-                  flex: 1,
-                }}
-                contentContainerStyle={{
-                  paddingVertical: 10,
-                  paddingHorizontal: 15,
-                }}
-                ListEmptyComponent={() => (
-                  <Text
-                    style={{
-                      color: '#003a6b',
-                      textAlign: 'center',
-                      marginTop: 10,
-                      fontFamily: fonts.regular,
-                    }}
-                  >
-                    Please select images to creaet collage
-                  </Text>
-                )}
-              />
+            {!loading && newImageUri && (
+              <View style={styles.iconRow}>
+                <TouchableOpacity
+                  style={styles.downloadBtn}
+                  onPress={() => shareImage(newImageUri, setToastMessage)}
+                >
+                  <Ionicons name="share-social" size={20} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.downloadBtn}
+                  onPress={() => downloadImage(newImageUri, setToastMessage)}
+                >
+                  <Ionicons name="arrow-down-outline" size={20} color="white" />
+                </TouchableOpacity>
+              </View>
             )}
             {loading && <AnimatedTextLoader texts={loadingTexts} />}
             {!loading && newImageUri && (
@@ -280,51 +210,18 @@ export default function CreatePhotoCollage({ navigation }) {
                 resizeMode="contain"
               />
             )}
-            <View style={styles.iconRow}>
-              {!loading && selectedImages.length == 0 && (
-                <TouchableOpacity
-                  style={styles.downloadBtn}
-                  onPress={() => openCustomGallery()}
-                >
-                  <Ionicons name="add-outline" size={20} color="white" />
-                </TouchableOpacity>
-              )}
-              {!loading && newImageUri && selectedImages.length > 0 && (
-                <TouchableOpacity
-                  style={styles.downloadBtn}
-                  onPress={() => setShowConfirmation(true)}
-                >
-                  <Ionicons name="create-outline" size={20} color="white" />
-                </TouchableOpacity>
-              )}
-              {!loading && newImageUri && (
-                <>
-                  <TouchableOpacity
-                    style={styles.downloadBtn}
-                    onPress={() => shareImage(newImageUri, setToastMessage)}
-                  >
-                    <Ionicons name="share-social" size={20} color="white" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={styles.downloadBtn}
-                    onPress={() => downloadImage(newImageUri, setToastMessage)}
-                  >
-                    <Ionicons
-                      name="arrow-down-outline"
-                      size={20}
-                      color="white"
-                    />
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
+            {!loading && !newImageUri && (
+              <Ionicons name="image-outline" size={200} color="gray" />
+            )}
           </View>
+
           <View style={styles.row}>
             {imageSizes.map((item, index) => (
               <TouchableOpacity
                 style={[
                   styles.box,
                   selectedImage == item.label && styles.selectedBox,
+                  ,
                   index === 0 && {
                     borderTopLeftRadius: 10,
                     borderBottomLeftRadius: 10,
@@ -355,7 +252,7 @@ export default function CreatePhotoCollage({ navigation }) {
           </View>
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Select from menu or enter your own collage style..."
+              placeholder="Describe the image you want to create..."
               multiline
               style={[
                 styles.input,
@@ -383,7 +280,7 @@ export default function CreatePhotoCollage({ navigation }) {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.sendButton}
-              onPress={() => createPhotoCollageClicked()}
+              onPress={() => createImageClicked()}
               disabled={loading}
             >
               <Ionicons name="send" size={22} color="#003a6b" />
@@ -427,27 +324,9 @@ export default function CreatePhotoCollage({ navigation }) {
               </View>
             </View>
           )}
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
       <Toast config={toastConfig} />
-      <CustomGalleryModal
-        selectedImages={selectedImages}
-        setSelectedImages={setSelectedImages}
-        visible={showGallery}
-        onClose={() => setShowGallery(false)}
-        onDone={images => setSelectedImages(images)}
-        selectionLimit={20}
-      />
-      <CustomAlert
-        visible={showConfirmation}
-        message="Are you sure you want to change the images? Previouse results will be lost."
-        cancelText="CANCEL"
-        confirmText="CHANGE"
-        onCancel={() => setShowConfirmation(false)}
-        onConfirm={() => {
-          openCustomGallery();
-        }}
-      />
     </>
   );
 }
@@ -458,7 +337,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   scroll: {
-    flex: 1,
+    flexGrow: 1,
     paddingBottom: 20,
   },
   header: {
@@ -537,7 +416,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
-    zIndex: 9999,
+    zIndex: 9999
   },
   menuContainer: {
     width: '95%',
@@ -559,7 +438,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 12,
-    borderRadius: 10,
   },
   box: {
     flex: 1,
@@ -596,39 +474,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  image: {
-    width: screenWidth / 3,
-    height: screenWidth / 3,
-    margin: 2,
-    borderRadius: 5,
-  },
-
-  remove: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    backgroundColor: 'red',
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  subTitle: {
-    color: colors.secondary,
-    fontSize: 15,
-    fontFamily: 'bitter-italic',
-    textAlign: 'justify',
-    padding: 20,
-    lineHeight: 20,
-  },
   headingTitle: {
     color: colors.secondary,
-    fontFamily: fonts.bold,
+    fontFamily: fonts.bold
   },
   menuHeading: {
     backgroundColor: colors.primary,
     padding: 15,
-    fontSize: 15,
+    fontSize: 15
   },
 });
