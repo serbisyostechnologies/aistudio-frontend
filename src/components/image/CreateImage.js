@@ -16,7 +16,7 @@ import { useState, useEffect } from 'react';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../../src/utils/toastConfig';
 import AnimatedTextLoader from '../AnimatedTextLoader';
-import { createImage } from '../../src/api/endPoints';
+import { createImage } from '../../api/endPoints';
 import { useSelector } from 'react-redux';
 import { shareImage, downloadImage } from '../../utils/Utilities';
 import { globalStyles, colors, fonts } from '../../styles/globalStyles';

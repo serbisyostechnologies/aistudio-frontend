@@ -17,7 +17,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useState, useEffect } from 'react';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../../src/utils/toastConfig';
-import { createCollage } from '../../src/api/endPoints';
+import { createCollage } from '../../api/endPoints';
 import { useSelector } from 'react-redux';
 import { shareImage, downloadImage } from '../../utils/Utilities';
 import { globalStyles, colors, fonts } from '../../styles/globalStyles';
@@ -34,7 +34,7 @@ export default function CreatePhotoCollage({ navigation }) {
   const user = useSelector(state => state.auth.user);
   const user_id = user._id;
   const [loading, setLoading] = useState(false);
-  const [prompt, setPrompt] = useState();
+  const [prompt, setPrompt] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const [newImageUri, setNewImageUri] = useState('');
@@ -155,6 +155,7 @@ export default function CreatePhotoCollage({ navigation }) {
   const createPhotoCollageClicked = async () => {
     if (selectedImages.length == 0) {
       setToastMessage('Please select images to create collage!', 'error');
+      return;
     }
 
     setNewImageUri('');
@@ -188,6 +189,7 @@ export default function CreatePhotoCollage({ navigation }) {
         setToastMessage('Failed to create image collage!', 'error');
       }
     } catch (error) {
+      console.log(error.message)
       setNewImageUri('');
       setLoading(false);
       setToastMessage('Failed to create image collage!', 'error');
@@ -260,7 +262,7 @@ export default function CreatePhotoCollage({ navigation }) {
                       fontFamily: fonts.regular,
                     }}
                   >
-                    Please select images to creaet collage
+                    Please select images to create collage
                   </Text>
                 )}
               />

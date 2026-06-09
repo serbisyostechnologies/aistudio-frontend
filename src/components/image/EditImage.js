@@ -193,6 +193,11 @@ export default function EditImage({ navigation, route }) {
   };
 
   const editImageClicked = async () => {
+    if ( !prompt.trim() ) {
+      setToastMessage('Please enter/select a prompt from menu!', 'error');
+      return;
+    }
+    
     setNewImageUri('');
     setSubmitted(true);
     try {

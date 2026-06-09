@@ -149,11 +149,6 @@ export default function AnalyseImage({ navigation, route }) {
   };
 
   const analyseImageClicked = async () => {
-    if (!prompt.trim()) {
-      setToastMessage('Please enter an analysis prompt!', 'error');
-      return;
-    }
-
     setAnalysisText('');
     setSubmitted(true);
     try {

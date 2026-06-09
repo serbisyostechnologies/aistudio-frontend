@@ -71,6 +71,14 @@ export const analyseImage = async data => {
 };
 
 //Project video end points
-export const createVideo = async data => {
+export const createVideoUsingPrompt = async data => {
   return await apiClient.post('/projects/create-video-using-prompt', data);
+};
+
+export const createVideoUsingImages = async data => {
+  return await apiClient.post('/projects/create-video-using-images', data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };

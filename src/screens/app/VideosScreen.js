@@ -18,10 +18,14 @@ import { requestPermissions } from '../../components/RequestPermissions';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../utils/toastConfig';
 import { pickImage } from '../../utils/ImagePicker';
+import CustomGalleryModal from '../../utils/CustomGalleryModal';
 
 export default function VideosScreen({ navigation }) {
   const [visible, setVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [operation, setOperation] = useState('');
+  const [showGallery, setShowGallery] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
 
   const selectMediaOption = option => {
     setOperation(option);
@@ -57,6 +61,14 @@ export default function VideosScreen({ navigation }) {
     navigation.push('CreateVideo', { option: 'PROMPT', video: null });
   };
 
+  const onImagesSelected = () => {
+    if( selectedImages.length == 0 ) {
+      setToastMessage("Please select images to create video", "info")
+      return;
+    }
+    navigation.push('CreateVideo', { option: 'IMAGES', images: selectedImages })
+  }
+
   return (
     <>
       <KeyboardAvoidingView
@@ -84,7 +96,7 @@ export default function VideosScreen({ navigation }) {
               <View style={styles.row}>
                 <TouchableOpacity
                   style={styles.card}
-                  onPress={() => navigation.push('CreateVideo')}
+                  onPress={() => setModalVisible(!modalVisible)}
                 >
                   <LinearGradient
                     colors={['#f26a8d', '#f49cbb']}
@@ -181,7 +193,41 @@ export default function VideosScreen({ navigation }) {
           </View>
         </View>
       </Modal>
+      <Modal visible={modalVisible} transparent animationType="slide">
+        <View style={mstyles.overlay}>
+          <Pressable
+            style={StyleSheet.absoluteFill}
+            onPress={() => setVisible(false)}
+          />
+
+          <View style={mstyles.modal}>
+            <Pressable
+              style={mstyles.option}
+              onPress={() => {setModalVisible(false); navigation.push('CreateVideo', {option: 'PROMPT', images: []})}}
+            >
+              <Ionicons name="sparkles" size={26} color="#003a6b" />
+              <Text style={mstyles.text}>Using an AI prompt</Text>
+            </Pressable>
+
+            <Pressable
+              style={mstyles.option}
+              onPress={() => {setModalVisible(false); setShowGallery(true)}}
+            >
+              <Ionicons name="images" size={26} color="#003a6b" />
+              <Text style={mstyles.text}>Using images in mobile</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
       <Toast config={toastConfig} />
+      <CustomGalleryModal
+        selectedImages={selectedImages}
+        setSelectedImages={setSelectedImages}
+        visible={showGallery}
+        onClose={() => {setSelectedImages([]); setShowGallery(false);}}
+        onDone={images => onImagesSelected()}
+        selectionLimit={10}
+      />
     </>
   );
 }

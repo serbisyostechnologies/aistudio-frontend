@@ -18,6 +18,7 @@ const CustomGalleryModal = ({
   setSelectedImages,
   visible,
   onClose,
+  onDone,
   selectionLimit,
 }) => {
   const [error, setError] = useState('');
@@ -75,6 +76,7 @@ const CustomGalleryModal = ({
           <TouchableOpacity
             onPress={() => {
               onClose();
+              onDone(selectedImages);
             }}
           >
             <Text style={styles.btn}>Done ({selectedImages.length})</Text>
