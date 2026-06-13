@@ -34,7 +34,7 @@ export default function TabNavigator({ navigation }) {
           },
           tabBarLabelStyle: {
             fontSize: 13,
-            fontFamily: 'saira-bold',
+            fontFamily: fonts.bold,
           },
           tabBarActiveBackgroundColor: '#fff',
           tabBarIcon: ({ focused, color, size }) => {

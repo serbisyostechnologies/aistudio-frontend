@@ -29,6 +29,7 @@ import {
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { requestPermissions } from '../../components/RequestPermissions';
 import ProCropper from '../../components/ProCropper';
+import { globalStyles, colors, fonts } from '../../styles/globalStyles';
 
 export default function ProfileScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -347,14 +348,14 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 20,
     color: '#fff',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 
   email: {
     fontSize: 14,
     color: '#dbe9ff',
     marginTop: 2,
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 
   section: {
@@ -383,7 +384,7 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     fontSize: 16,
     color: '#003a6b',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 });
 
@@ -436,6 +437,6 @@ const mstyles = StyleSheet.create({
   text: {
     fontSize: 14,
     color: '#003a6b',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 });

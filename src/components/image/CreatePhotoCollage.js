@@ -189,7 +189,6 @@ export default function CreatePhotoCollage({ navigation }) {
         setToastMessage('Failed to create image collage!', 'error');
       }
     } catch (error) {
-      console.log(error.message)
       setNewImageUri('');
       setLoading(false);
       setToastMessage('Failed to create image collage!', 'error');
@@ -345,7 +344,7 @@ export default function CreatePhotoCollage({ navigation }) {
                   <Text
                     style={{
                       color: selectedImage == item.label ? '#003a6b' : '#fff',
-                      fontFamily: 'saira-bold',
+                      fontFamily: fonts.bold,
                       fontSize: 16,
                     }}
                   >
@@ -471,10 +470,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#003a6b',
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     marginLeft: 15,
     color: '#fff',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
   content: {
     flex: 1,
@@ -585,7 +584,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
   iconRow: {
     position: 'absolute',

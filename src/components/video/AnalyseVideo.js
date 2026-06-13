@@ -78,10 +78,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#003a6b',
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     marginLeft: 15,
     color: '#fff',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
   content: {
     height: '50%',
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
   iconRow: {
     position: 'absolute',
@@ -276,6 +276,6 @@ const mstyles = StyleSheet.create({
   text: {
     fontSize: 14,
     color: '#003a6b',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 });

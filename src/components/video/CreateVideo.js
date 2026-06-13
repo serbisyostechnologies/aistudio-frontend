@@ -124,7 +124,6 @@ export default function CreateVideo({ navigation, route }) {
       });
       setLoading(false);
       const data = response.data;
-      console.log(data);
       if (data.success) {
         dispatch(updateCredits(data.credits));
         clearPrompt();
@@ -164,7 +163,6 @@ export default function CreateVideo({ navigation, route }) {
       const response = await createVideoUsingImages(formData);
       setLoading(false);
       const data = response.data;
-      console.log(data);
       if (data.success) {
         setSelectedAnim("");
         setSelectedImages([]);
@@ -175,7 +173,6 @@ export default function CreateVideo({ navigation, route }) {
         setToastMessage('Failed to create video!', 'error');
       }
     } catch (error) {
-      console.log(error.message);
       setLoading(false);
       setToastMessage('Failed to create video!', 'error');
     }
@@ -510,10 +507,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#003a6b',
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     marginLeft: 15,
     color: '#fff',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
   content: {
     flex: 1,
@@ -624,7 +621,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 18,
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
   iconRow: {
     position: 'absolute',
@@ -688,6 +685,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: colors.secondary,
     fontSize: 18,
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 });

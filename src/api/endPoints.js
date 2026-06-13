@@ -34,8 +34,8 @@ export const createImage = async data => {
   return await apiClient.post('/projects/create-image-using-prompt', data);
 };
 
-export const getAllProjects = async data => {
-  return await apiClient.post('/projects/get-all-by-user-id', data);
+export const getProjectsByUserId = async data => {
+  return await apiClient.post('/projects/get-projects-by-user-id', data);
 };
 
 export const updateProjectLikeUnlike = async data => {

@@ -35,7 +35,6 @@ export const pickImage = async ({
 
     return result.assets[0];
   } catch (error) {
-    console.log(error);
     return null;
   }
 };

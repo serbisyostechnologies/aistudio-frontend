@@ -1,5 +1,6 @@
 import Share from 'react-native-share';
 import RNFS from 'react-native-fs';
+import ReactNativeBlobUtil from 'react-native-blob-util';
 
 export const formatDate = isoString => {
   const date = new Date(isoString);
@@ -17,13 +18,15 @@ export const formatDate = isoString => {
   return `${dd}-${mm}-${yyyy} ${HH}:${MM}:${SS}`;
 };
 
-export const shareImage = async (imageUrl, showMessage, fileType = "image") => {
+export const shareImage = async (imageUrl, showMessage, fileType = 'image') => {
   try {
     if (!imageUrl) {
       return;
     }
 
-    const fileName = `AI_${fileType == 'image' ? 'Image' : 'Video'}_${Date.now()}.${fileType == 'image' ? 'jpg' : 'mp4'}`;
+    const fileName = `AI_${
+      fileType == 'image' ? 'Image' : 'Video'
+    }_${Date.now()}.${fileType == 'image' ? 'jpg' : 'mp4'}`;
     const path = `${RNFS.CachesDirectoryPath}/${fileName}`;
 
     const download = RNFS.downloadFile({
@@ -34,6 +37,7 @@ export const shareImage = async (imageUrl, showMessage, fileType = "image") => {
     const result = await download.promise;
 
     if (result.statusCode !== 200) {
+      showMessage(`Failed to share ${fileType}`, 'error');
       return;
     }
     await new Promise(res => setTimeout(res, 300));
@@ -45,13 +49,19 @@ export const shareImage = async (imageUrl, showMessage, fileType = "image") => {
       message: `Check out this AI-generated ${fileType} using AISerbisyosStudio App`,
     });
   } catch (error) {
-    showMessage(error.message, "error");
+    showMessage(error.message, 'error');
   }
 };
 
-export const downloadImage = async (imageUrl, showMessage, fileType = "Image") => {
+export const downloadImage = async (
+  imageUrl,
+  showMessage,
+  fileType = 'image',
+) => {
   try {
-    const fileName = `AI_${fileType == 'image' ? 'Image' : 'Video'}_${Date.now()}.${fileType == 'image' ? 'jpg' : 'mp4'}`;
+    const fileName = `AI_${
+      fileType == 'image' ? 'Image' : 'Video'
+    }_${Date.now()}.${fileType == 'image' ? 'jpg' : 'mp4'}`;
     const path = `${RNFS.DownloadDirectoryPath}/${fileName}`;
     const download = RNFS.downloadFile({
       fromUrl: imageUrl,
@@ -59,13 +69,25 @@ export const downloadImage = async (imageUrl, showMessage, fileType = "Image") =
     });
 
     const result = await download.promise;
+
+    await ReactNativeBlobUtil.fs.scanFile([
+      {
+        path,
+        mime: 'application/pdf',
+      },
+    ]);
+
     if (result.statusCode === 200) {
-      showMessage('Image savd at ' + path, 'success');
+      showMessage(
+        `${fileType === 'image' ? 'Image' : 'Video'} downloaded successfully!`,
+        'success',
+      );
     } else {
       showMessage(`Failed to save ${fileType}`, 'error');
     }
   } catch (error) {
-    showMessage(error.message, "error");
+    console.log(error.message);
+    showMessage(error.message, 'error');
   }
 };
 
@@ -83,20 +105,15 @@ export const getTimeAgo = createdAt => {
   const years = Math.floor(days / 365);
 
   if (minutes < 1) return 'Just now';
-  if (minutes < 60)
-    return `${minutes} min${minutes > 1 ? 's' : ''} ago`;
+  if (minutes < 60) return `${minutes} min${minutes > 1 ? 's' : ''} ago`;
 
-  if (hours < 24)
-    return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+  if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
 
-  if (days < 7)
-    return `${days} day${days > 1 ? 's' : ''} ago`;
+  if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`;
 
-  if (weeks < 4)
-    return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+  if (weeks < 4) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
 
-  if (months < 12)
-    return `${months} month${months > 1 ? 's' : ''} ago`;
+  if (months < 12) return `${months} month${months > 1 ? 's' : ''} ago`;
 
   return `${years} year${years > 1 ? 's' : ''} ago`;
 };

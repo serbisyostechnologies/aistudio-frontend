@@ -242,6 +242,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
     alignItems: 'center',
     width: '100%',
+    paddingHorizontal: 15
   },
   logo: {
     width: 60,
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: colors.secondary,
     fontSize: 18,
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
   footer: {
     flexDirection: 'row',

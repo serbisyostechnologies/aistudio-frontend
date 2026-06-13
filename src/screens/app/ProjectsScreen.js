@@ -16,7 +16,10 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useCallback, useEffect, useState } from 'react';
-import { updateDeviceIdentitiesApi, getAllProjects } from '../../api/endPoints';
+import {
+  updateDeviceIdentitiesApi,
+  getProjectsByUserId,
+} from '../../api/endPoints';
 import { useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
 import { globalStyles, colors, fonts } from '../../styles/globalStyles';
@@ -31,6 +34,8 @@ import Toast from 'react-native-toast-message';
 import { toastConfig } from '../../utils/toastConfig';
 import Video from 'react-native-video';
 
+const PAGE_SIZE = 10;
+
 export default function ProjectScreen({ navigation }) {
   const user = useSelector(state => state.auth.user);
   const credits = useSelector(state => state.auth.credits);
@@ -40,6 +45,13 @@ export default function ProjectScreen({ navigation }) {
   const [loading, setLoading] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [operation, setOperation] = useState('');
+  const [page, setPage] = useState(1);
+  const [refreshing, setRefreshing] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [filters, setFilters] = useState({
+      type: 'All',
+      time: 'All',
+    });
 
   const quickTools = [
     {
@@ -112,25 +124,46 @@ export default function ProjectScreen({ navigation }) {
     setModalVisible(true);
   };
 
+  const fetchData = useCallback(
+    async (pageNumber = 1, refresh = false) => {
+      try {
+        if (loading) return;
+        setLoading(true);
+
+        const userId = user._id;
+        const response = await getProjectsByUserId({
+          userId,
+          limit: PAGE_SIZE,
+          skip: (pageNumber - 1) * PAGE_SIZE,
+          filters: filters
+        });
+        setLoading(false);
+        const newData = response.data.projects || [];
+
+        if (refresh) {
+          setCreations(newData);
+        } else {
+          setCreations(prev => [...prev, ...newData]);
+        }
+
+        if (newData.length < PAGE_SIZE) {
+          setHasMore(false);
+        } else {
+          setHasMore(true);
+        }
+
+        setPage(pageNumber);
+      } finally {
+        setLoading(false);
+        setRefreshing(false);
+      }
+    },
+    [loading],
+  );
+
   useFocusEffect(
     useCallback(() => {
-      const fetchProjects = async () => {
-        try {
-          setLoading(true);
-          setCreations([]);
-          const userId = user._id;
-          const response = await getAllProjects({ userId });
-          setLoading(false);
-          setCreations(response.data.projects);
-        } catch (error) {
-          setLoading(false);
-          console.log(error.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchProjects();
+      fetchData(1, true);
     }, []),
   );
 
@@ -155,6 +188,18 @@ export default function ProjectScreen({ navigation }) {
       updateDeviceIdentities();
     }
   }, []);
+
+  const handleLoadMore = () => {
+    if (!loading && hasMore) {
+      fetchData(page + 1);
+    }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setHasMore(true);
+    fetchData(1, true);
+  };
 
   const toolCardClicked = cardUrl => {
     switch (cardUrl) {
@@ -254,10 +299,19 @@ export default function ProjectScreen({ navigation }) {
     );
   };
 
+  const renderFooter = () => {
+    if (!loading) return null;
+    return (
+      <View style={styles.paginationFooter}>
+        <ActivityIndicator size="small" />
+      </View>
+    );
+  };
+
   return (
     <>
       <ImageBackground
-        source={require('../../assets/images/background/home.png')}
+        source={require('../../assets/backgrounds/home.png')}
         style={styles.background}
         resizeMode="cover"
       >
@@ -276,7 +330,7 @@ export default function ProjectScreen({ navigation }) {
 
             <Text style={styles.subTitle}>AI Serbisyos Studio</Text>
 
-            <TouchableOpacity style={styles.circle}>
+            <TouchableOpacity style={styles.circle} onPress={() => navigation.push("AppWalletScreen")}>
               <Ionicons name="trophy" size={15} color="#fff" />
             </TouchableOpacity>
           </View>
@@ -310,14 +364,28 @@ export default function ProjectScreen({ navigation }) {
                   <Text style={[styles.toolTitle, { marginTop: 5 }]}>
                     Recent Creations
                   </Text>
+                  <TouchableOpacity style={styles.viewAllContainer} onPress={() => navigation.push("AllProjectsScreen")}>
+                    <Text style={styles.viewAll}>View All</Text>
+                    <Ionicons name="chevron-forward" size={16} color="blue"/>
+                    <Ionicons name="chevron-forward" size={16} color="blue" style={{ marginLeft: -10 }}/>
+                  </TouchableOpacity>
                 </View>
                 <FlatList
                   horizontal
+                  pagingEnabled
                   data={creations}
                   keyExtractor={item => item._id}
                   renderItem={({ item }) => <CreationCard item={item} />}
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.listContainer}
+                  onEndReached={handleLoadMore}
+                  onEndReachedThreshold={0.5}
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  removeClippedSubviews
+                  maxToRenderPerBatch={5}
+                  windowSize={5}
+                  initialNumToRender={5}
                   ListEmptyComponent={() => (
                     <Text
                       style={{
@@ -332,14 +400,7 @@ export default function ProjectScreen({ navigation }) {
                       see them here.
                     </Text>
                   )}
-                  ListFooterComponent={
-                    loading ? (
-                      <ActivityIndicator
-                        size="large"
-                        style={{ marginVertical: 20 }}
-                      />
-                    ) : null
-                  }
+                  ListFooterComponent={renderFooter}
                 />
               </ScrollView>
               <View style={styles.cardContainer}>
@@ -349,7 +410,6 @@ export default function ProjectScreen({ navigation }) {
           </View>
         </SafeAreaView>
       </ImageBackground>
-      <Loader visible={loading} />
       <Toast config={toastConfig} />
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={mstyles.overlay}>
@@ -444,6 +504,14 @@ const styles = StyleSheet.create({
   projectHeader: {
     backgroundColor: colors.primary,
     padding: 10,
+  },
+  viewAll: {
+    fontFamily: fonts.regular,
+    color: "blue"
+  },
+  viewAllContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   card: {
     borderWidth: 1,
@@ -633,6 +701,11 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  paginationFooter: {
+    width: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 const mstyles = StyleSheet.create({
@@ -684,6 +757,6 @@ const mstyles = StyleSheet.create({
   text: {
     fontSize: 14,
     color: '#003a6b',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 });

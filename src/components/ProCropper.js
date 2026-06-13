@@ -20,7 +20,7 @@ import {
   GestureDetector,
   Gesture,
 } from 'react-native-gesture-handler';
-import { globalStyles } from '../styles/globalStyles';
+import { fonts, globalStyles } from '../styles/globalStyles';
 import ViewShot from 'react-native-view-shot';
 import { useRef } from 'react';
 
@@ -86,8 +86,6 @@ export default function ProCropper({
     try {
       const uri = await viewShotRef.current.capture();
       onUpload(uri);
-    } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -231,6 +229,6 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 });

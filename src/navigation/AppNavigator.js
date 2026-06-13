@@ -15,6 +15,8 @@ import AnalyseImage from "../components/image/AnalyseImage";
 import CreateVideo from "../components/video/CreateVideo";
 import EditVideo from "../components/video/EditVideo";
 import AnalyseVideo from "../components/video/AnalyseVideo";
+import AllProjectsScreen from "../components/AllProjectsScreen";
+import AppWalletScreen from "../components/profile/AppWalletScreen"
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +46,8 @@ export default function AppNavigator() {
       <Stack.Screen name="CreateVideo" component={CreateVideo} />
       <Stack.Screen name="EditVideo" component={EditVideo} />
       <Stack.Screen name="AnalyseVideo" component={AnalyseVideo} />
+      <Stack.Screen name="AllProjectsScreen" component={AllProjectsScreen} />
+      <Stack.Screen name="AppWalletScreen" component={AppWalletScreen} />
       <Stack.Screen name="AppHome" component={TabNavigator} />
     </Stack.Navigator>
   );

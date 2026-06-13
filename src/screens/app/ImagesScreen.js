@@ -325,6 +325,6 @@ const mstyles = StyleSheet.create({
   text: {
     fontSize: 14,
     color: '#003a6b',
-    fontFamily: 'saira-bold',
+    fontFamily: fonts.bold,
   },
 });

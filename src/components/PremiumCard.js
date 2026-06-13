@@ -3,8 +3,10 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { globalStyles, colors, fonts } from '../styles/globalStyles';
+import { useNavigation } from '@react-navigation/native';
 
 const PremiumCard = ({ credits }) => {
+  const navigation = useNavigation();
   return (
     <LinearGradient
       colors={['#6A11CB', '#2575FC']}
@@ -28,7 +30,7 @@ const PremiumCard = ({ credits }) => {
       </View>
 
       {!credits && (
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.push("AppWalletScreen")}>
           <Text style={styles.buttonText}>Get Credits</Text>
           <Ionicons name="chevron-forward" size={18} color="#3b3bff" />
         </TouchableOpacity>
