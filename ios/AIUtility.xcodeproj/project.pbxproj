@@ -11,16 +11,11 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		5D096EEB30604EE286152596 /* saira-bold-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6FF10A44B6C642809F4100F3 /* saira-bold-italic.ttf */; };
-		8CC96EABAF43424CBD79B60A /* bitter-bold-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21EF749F5631403E875FCBF2 /* bitter-bold-italic.ttf */; };
-		9CDAAD0627D6497D8C74839C /* roboto-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 990C690222534EB2A90D4291 /* roboto-bold.ttf */; };
-		C47CB24251E74D9AA1422DA3 /* saira-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A9F6D7D55997439CAF93A3AB /* saira-bold.ttf */; };
-		24C55C5886F84041A9DD575A /* roboto.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 850577ABC75D4998A9C6073B /* roboto.ttf */; };
-		AEFAE658D4AF4FFDAED7C60A /* bitter-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DA2759AB56C64A0E93B4A6CD /* bitter-bold.ttf */; };
-		E535760FA37C43759CA435B7 /* saira-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 129A00C513AB49C6871B9178 /* saira-italic.ttf */; };
-		C4A66DB960B14E43A2A5A76B /* bitter-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ABDF3651A6D7460B9435E85A /* bitter-italic.ttf */; };
-		6993768D233B465097F9452B /* saira.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BE7ECFC311D9420FAA347DBB /* saira.ttf */; };
-		441C5F82735F484F87428181 /* bitter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F73367BFBD44D30BA0C0B9F /* bitter.ttf */; };
+		FAC7CA64F9A34F5EB1E113CA /* saira-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 176D25B5C01041D7B3230DA4 /* saira-italic.ttf */; };
+		B852B5AD5C644C1ABE96323D /* bitter-bold-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B41E6F2A00D340EAAAAB4DD0 /* bitter-bold-italic.ttf */; };
+		E63C48A4DD7F40D0A7040FD5 /* bitter-bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A1656D55E42843DF930D7089 /* bitter-bold.ttf */; };
+		B6B6BC13A83A417EA4251C12 /* bitter-italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE02990467484604B11D5164 /* bitter-italic.ttf */; };
+		2D70091FB4E741BABEC6F597 /* bitter.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0DE8F82E78994F6D8C75EC00 /* bitter.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,16 +29,11 @@
 		761780EC2CA45674006654EE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = AIUtility/AppDelegate.swift; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = AIUtility/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		6FF10A44B6C642809F4100F3 /* saira-bold-italic.ttf */ = {isa = PBXFileReference; name = "saira-bold-italic.ttf"; path = "../src/assets/fonts/saira/saira-bold-italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		21EF749F5631403E875FCBF2 /* bitter-bold-italic.ttf */ = {isa = PBXFileReference; name = "bitter-bold-italic.ttf"; path = "../src/assets/fonts/bitter/bitter-bold-italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		990C690222534EB2A90D4291 /* roboto-bold.ttf */ = {isa = PBXFileReference; name = "roboto-bold.ttf"; path = "../src/assets/fonts/roboto/roboto-bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		A9F6D7D55997439CAF93A3AB /* saira-bold.ttf */ = {isa = PBXFileReference; name = "saira-bold.ttf"; path = "../src/assets/fonts/saira/saira-bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		850577ABC75D4998A9C6073B /* roboto.ttf */ = {isa = PBXFileReference; name = "roboto.ttf"; path = "../src/assets/fonts/roboto/roboto.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		DA2759AB56C64A0E93B4A6CD /* bitter-bold.ttf */ = {isa = PBXFileReference; name = "bitter-bold.ttf"; path = "../src/assets/fonts/bitter/bitter-bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		129A00C513AB49C6871B9178 /* saira-italic.ttf */ = {isa = PBXFileReference; name = "saira-italic.ttf"; path = "../src/assets/fonts/saira/saira-italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		ABDF3651A6D7460B9435E85A /* bitter-italic.ttf */ = {isa = PBXFileReference; name = "bitter-italic.ttf"; path = "../src/assets/fonts/bitter/bitter-italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		BE7ECFC311D9420FAA347DBB /* saira.ttf */ = {isa = PBXFileReference; name = "saira.ttf"; path = "../src/assets/fonts/saira/saira.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
-		2F73367BFBD44D30BA0C0B9F /* bitter.ttf */ = {isa = PBXFileReference; name = "bitter.ttf"; path = "../src/assets/fonts/bitter/bitter.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		176D25B5C01041D7B3230DA4 /* saira-italic.ttf */ = {isa = PBXFileReference; name = "saira-italic.ttf"; path = "../src/assets/fonts/saira/saira-italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B41E6F2A00D340EAAAAB4DD0 /* bitter-bold-italic.ttf */ = {isa = PBXFileReference; name = "bitter-bold-italic.ttf"; path = "../src/assets/fonts/bitter/bitter-bold-italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		A1656D55E42843DF930D7089 /* bitter-bold.ttf */ = {isa = PBXFileReference; name = "bitter-bold.ttf"; path = "../src/assets/fonts/bitter/bitter-bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		AE02990467484604B11D5164 /* bitter-italic.ttf */ = {isa = PBXFileReference; name = "bitter-italic.ttf"; path = "../src/assets/fonts/bitter/bitter-italic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0DE8F82E78994F6D8C75EC00 /* bitter.ttf */ = {isa = PBXFileReference; name = "bitter.ttf"; path = "../src/assets/fonts/bitter/bitter.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,16 +111,11 @@
 		88FB399CC130428D969D9D45 /* Resources */ = {
 			isa = "PBXGroup";
 			children = (
-				6FF10A44B6C642809F4100F3 /* saira-bold-italic.ttf */,
-				21EF749F5631403E875FCBF2 /* bitter-bold-italic.ttf */,
-				990C690222534EB2A90D4291 /* roboto-bold.ttf */,
-				A9F6D7D55997439CAF93A3AB /* saira-bold.ttf */,
-				850577ABC75D4998A9C6073B /* roboto.ttf */,
-				DA2759AB56C64A0E93B4A6CD /* bitter-bold.ttf */,
-				129A00C513AB49C6871B9178 /* saira-italic.ttf */,
-				ABDF3651A6D7460B9435E85A /* bitter-italic.ttf */,
-				BE7ECFC311D9420FAA347DBB /* saira.ttf */,
-				2F73367BFBD44D30BA0C0B9F /* bitter.ttf */,
+				176D25B5C01041D7B3230DA4 /* saira-italic.ttf */,
+				B41E6F2A00D340EAAAAB4DD0 /* bitter-bold-italic.ttf */,
+				A1656D55E42843DF930D7089 /* bitter-bold.ttf */,
+				AE02990467484604B11D5164 /* bitter-italic.ttf */,
+				0DE8F82E78994F6D8C75EC00 /* bitter.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -198,16 +183,11 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				5D096EEB30604EE286152596 /* saira-bold-italic.ttf in Resources */,
-				8CC96EABAF43424CBD79B60A /* bitter-bold-italic.ttf in Resources */,
-				9CDAAD0627D6497D8C74839C /* roboto-bold.ttf in Resources */,
-				C47CB24251E74D9AA1422DA3 /* saira-bold.ttf in Resources */,
-				24C55C5886F84041A9DD575A /* roboto.ttf in Resources */,
-				AEFAE658D4AF4FFDAED7C60A /* bitter-bold.ttf in Resources */,
-				E535760FA37C43759CA435B7 /* saira-italic.ttf in Resources */,
-				C4A66DB960B14E43A2A5A76B /* bitter-italic.ttf in Resources */,
-				6993768D233B465097F9452B /* saira.ttf in Resources */,
-				441C5F82735F484F87428181 /* bitter.ttf in Resources */,
+				FAC7CA64F9A34F5EB1E113CA /* saira-italic.ttf in Resources */,
+				B852B5AD5C644C1ABE96323D /* bitter-bold-italic.ttf in Resources */,
+				E63C48A4DD7F40D0A7040FD5 /* bitter-bold.ttf in Resources */,
+				B6B6BC13A83A417EA4251C12 /* bitter-italic.ttf in Resources */,
+				2D70091FB4E741BABEC6F597 /* bitter.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

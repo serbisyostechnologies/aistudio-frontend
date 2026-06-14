@@ -56,15 +56,10 @@
 	<false/>
 	<key>UIAppFonts</key>
 	<array>
-		<string>saira-bold-italic.ttf</string>
-		<string>bitter-bold-italic.ttf</string>
-		<string>roboto-bold.ttf</string>
-		<string>saira-bold.ttf</string>
-		<string>roboto.ttf</string>
-		<string>bitter-bold.ttf</string>
 		<string>saira-italic.ttf</string>
+		<string>bitter-bold-italic.ttf</string>
+		<string>bitter-bold.ttf</string>
 		<string>bitter-italic.ttf</string>
-		<string>saira.ttf</string>
 		<string>bitter.ttf</string>
 	</array>
 </dict>
